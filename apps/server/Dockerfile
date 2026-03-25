@@ -1,9 +1,21 @@
-FROM node:20
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
+# Copy root lockfile and server package.json
 COPY package-lock.json ./
-RUN npm install --production
+COPY apps/server/package.json ./apps/server/
+
+# Install dependencies (only server ones for this image)
+RUN npm ci --workspace=server --include-workspace-root
+
+# Copy the rest of the application
 COPY . .
-RUN npm run build
+
+# Build the server
+RUN npm run build -w server
+
+# Expose port (Matches serverPort in config)
+EXPOSE 3000
+
+CMD ["npm", "run", "start:server", "-w", "server"]

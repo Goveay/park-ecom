@@ -1,4 +1,4 @@
-# Multi-stage build for Next.js
+# Multi-stage build for Next.js in a Monorepo
 FROM node:20-alpine AS base
 
 # Install dependencies only when needed
@@ -6,20 +6,24 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci
+# Copy root lockfile and storefront package.json
+COPY package-lock.json ./
+COPY apps/storefront/package.json ./apps/storefront/
+
+# Install dependencies using workspaces
+RUN npm ci --workspace=storefront --include-workspace-root
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app ./
 COPY . .
 
 # Environment variables must be present at build time for Next.js Client Components
 ARG NEXT_PUBLIC_VENDURE_API_URL
 ENV NEXT_PUBLIC_VENDURE_API_URL=$NEXT_PUBLIC_VENDURE_API_URL
 
-RUN npm run build
+RUN npm run build -w storefront
 
 # Production image, copy all the files and run next
 FROM base AS runner
@@ -30,12 +34,11 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
+COPY --from=builder /app/apps/storefront/public ./public
 
 # Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/static ./apps/storefront/.next/static
 
 USER nextjs
 
@@ -44,4 +47,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+# Note: server.js in standalone mode is inside the app directory
+CMD ["node", "apps/storefront/server.js"]

@@ -20,8 +20,8 @@ services:
   # Vendure API Server
   server:
     build: 
-      context: ./apps/server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/server/Dockerfile
     restart: always
     environment:
       DB_TYPE: postgres
@@ -44,8 +44,8 @@ services:
   # Vendure Worker
   worker:
     build: 
-      context: ./apps/server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/server/Dockerfile
     command: npm run dev:worker
     restart: always
     environment:
@@ -61,8 +61,8 @@ services:
   # Storefront (Next.js)
   storefront:
     build:
-      context: ./apps/storefront
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/storefront/Dockerfile
       args:
         NEXT_PUBLIC_VENDURE_API_URL: https://api.parkpicasso.com/shop-api
     restart: always
@@ -74,8 +74,8 @@ services:
   # Management Panel
   management:
     build:
-      context: ./managment
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: managment/Dockerfile
       args:
         VITE_VENDURE_API_URL: https://api.parkpicasso.com/shop-api
     restart: always
