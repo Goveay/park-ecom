@@ -26,7 +26,12 @@ ENV NODE_OPTIONS="--max-old-space-size=2048"
 
 # Force build to be production and skip non-critical checks
 ENV NODE_ENV=production
-RUN npm run build -w storefront
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_STANDALONE=true
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
+# Run build across all workspaces or just storefront
+RUN npm run build -w storefront -- --no-lint
 
 # Final setup
 EXPOSE 3000

@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
         ignoreBuildErrors: true,
     },
     output: 'standalone',
+    // Disabling experimental cacheComponents to avoid build-time API dependency
+    // cacheComponents: true,
     images: {
         dangerouslyAllowLocalIP: true,
         remotePatterns: [
