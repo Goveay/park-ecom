@@ -12,7 +12,7 @@ COPY package.json package-lock.json ./
 COPY apps/storefront/package.json ./apps/storefront/
 
 # Install dependencies using workspaces
-RUN npm ci --workspace=storefront --include-workspace-root
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS builder
