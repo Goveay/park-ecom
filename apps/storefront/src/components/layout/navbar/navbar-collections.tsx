@@ -44,8 +44,8 @@ export async function NavbarCollections() {
         'oyuncak'
     ];
 
-    const categoryList = collections.filter(c => targetSlugs.includes(c.slug))
-        .sort((a, b) => targetSlugs.indexOf(a.slug) - targetSlugs.indexOf(b.slug));
+    const categoryList = collections.filter((c: any) => targetSlugs.includes(c.slug))
+        .sort((a: any, b: any) => targetSlugs.indexOf(a.slug) - targetSlugs.indexOf(b.slug));
 
     return (
         <NavigationMenuItem>
@@ -55,7 +55,7 @@ export async function NavbarCollections() {
 
             <NavigationMenuContent>
                 <ul className="grid w-[320px] gap-1 p-3 md:w-[400px] md:grid-cols-1 lg:w-[450px]">
-                    {categoryList.map((collection) => {
+                    {categoryList.map((collection: any) => {
                         const Icon = ICON_MAP[collection.slug] || Sparkles;
                         return (
                             <li key={collection.slug} className="list-none">

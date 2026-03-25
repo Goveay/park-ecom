@@ -24,7 +24,7 @@ async function getLatestProducts() {
 
     // Fetch full product details to get variants and their images
     const itemsWithVariants = await Promise.all(
-        items.map(async (item) => {
+        items.map(async (item: any) => {
              const parsedItem = readFragment(ProductCardFragment, item);
              const productDetail = await query(GetProductDetailQuery, { slug: parsedItem.slug });
              return {

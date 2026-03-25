@@ -61,7 +61,7 @@ export async function FeaturedCategories() {
                     className="w-full relative group"
                 >
                     <CarouselContent className="-ml-6 pb-8 pt-2">
-                        {collections.map((collection, index) => {
+                        {collections.map((collection: any, index) => {
                             const color = KIDS_COLORS[index % KIDS_COLORS.length];
                             return (
                                 <CarouselItem key={index} className="pl-6 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">

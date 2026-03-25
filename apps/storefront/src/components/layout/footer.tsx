@@ -31,7 +31,7 @@ export async function Footer() {
         'sosyal-tesisler',
         'oyuncak'
     ];
-    const categoryList = collections.filter(c => targetSlugs.includes(c.slug));
+    const categoryList = collections.filter((c: any) => targetSlugs.includes(c.slug));
 
     return (
         <footer className="relative bg-white border-t border-border mt-auto pt-16 pb-8 overflow-hidden">
@@ -108,7 +108,7 @@ export async function Footer() {
                         </h4>
                         <ul className="space-y-4 text-sm text-muted-foreground">
                             <li><Link href="/" className="hover:text-[#ff6000] transition-colors font-bold text-foreground">Anasayfa</Link></li>
-                            {categoryList.map((collection) => (
+                            {categoryList.map((collection: any) => (
                                 <li key={collection.id}>
                                     <Link
                                         href={`/collection/${collection.slug}`}
