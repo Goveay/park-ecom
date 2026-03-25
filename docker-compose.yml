@@ -1,0 +1,64 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-vendure}
+      POSTGRES_USER: ${DB_USER:-vendure}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+
+  server:
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    restart: always
+    environment:
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - server-assets:/usr/src/app/static
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: ./apps/server/Dockerfile
+    restart: always
+    command: ["npm", "run", "start:worker", "-w", "server"]
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+
+  storefront:
+    build:
+      context: .
+      dockerfile: ./apps/storefront/Dockerfile
+    restart: always
+    environment:
+      - PORT=3001
+      - NEXT_PUBLIC_VENDURE_SHOP_API_URL=https://api.parkpicasso.com/shop-api
+    depends_on:
+      - server
+
+volumes:
+  postgres-data:
+  redis-data:
+  server-assets:
