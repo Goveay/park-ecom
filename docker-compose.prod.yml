@@ -68,6 +68,8 @@ services:
       dockerfile: apps/storefront/Dockerfile
       args:
         NEXT_PUBLIC_VENDURE_SHOP_API_URL: https://api.parkpicasso.com/shop-api
+    environment:
+      VENDURE_SHOP_API_URL: http://server:3000/shop-api
     restart: always
     ports:
       - "3001:3000"
