@@ -154,7 +154,7 @@ export function FacetFilters({ productDataPromise, allCollectionsPromise, maxPri
         values: Array<{ id: string; name: string; count: number }>;
     }
 
-    const facetGroups = searchResult.facetValues.reduce((acc: Record<string, FacetGroup>, item) => {
+    const facetGroups = searchResult.facetValues.reduce((acc: Record<string, FacetGroup>, item: any) => {
         const facetName = item.facetValue.facet.name;
         
         // Sadece çok teknik/sistem fasetlerini gizle (Kategori fasetini de buraya ekledik çünkü onu yukarıda özel göstereceğiz)
