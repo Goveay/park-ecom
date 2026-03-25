@@ -1,4 +1,3 @@
-import { cacheLife } from 'next/cache';
 import { getTopCollections } from '@/lib/vendure/cached';
 import {
     NavigationMenuItem,
@@ -29,9 +28,6 @@ const ICON_MAP: Record<string, any> = {
 };
 
 export async function NavbarCollections() {
-    "use cache";
-    cacheLife('days');
-
     const collections = await getTopCollections();
 
     const targetSlugs = [
@@ -81,6 +77,3 @@ export async function NavbarCollections() {
         </NavigationMenuItem>
     );
 }
-
-// Added this internal Link import since it might be needed if NavbarLink doesn't support generic links
-import Link from 'next/link';

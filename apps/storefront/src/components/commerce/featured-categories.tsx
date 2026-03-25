@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { cacheLife } from "next/cache";
 import { query } from "@/lib/vendure/api";
 import { GetTopCollectionsQuery } from "@/lib/vendure/queries";
 import {
@@ -22,9 +21,6 @@ const KIDS_COLORS = [
 import { SectionHeader } from "./section-header";
 
 async function getFeaturedCategories() {
-    "use cache";
-    cacheLife("minutes");
-
     const result = await query(GetTopCollectionsQuery, {});
     return (result.data as any)?.collections?.items || [];
 }
