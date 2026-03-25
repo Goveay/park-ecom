@@ -11,7 +11,7 @@ export async function getActiveChannelCached() {
     cacheLife('hours');
 
     const result = await query(GetActiveChannelQuery);
-    return result.data.activeChannel;
+    return (result.data as any)?.activeChannel;
 }
 
 /**
@@ -24,7 +24,7 @@ export async function getAvailableCountriesCached() {
     cacheTag('countries');
 
     const result = await query(GetAvailableCountriesQuery);
-    return result.data.availableCountries || [];
+    return (result.data as any)?.availableCountries || [];
 }
 
 /**
@@ -37,5 +37,5 @@ export async function getTopCollections() {
     cacheTag('collections');
 
     const result = await query(GetTopCollectionsQuery);
-    return result.data.collections.items;
+    return (result.data as any)?.collections?.items ?? [];
 }
