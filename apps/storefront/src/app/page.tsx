@@ -32,7 +32,7 @@ import { HeroSkeleton } from "@/components/layout/hero-skeleton";
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function Home(_props: PageProps<'/'>) {
+export default async function Home() {
     return (
         <div className="min-h-screen">
             <Suspense fallback={<HeroSkeleton />}>
