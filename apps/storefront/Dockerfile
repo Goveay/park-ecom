@@ -6,8 +6,9 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy root lockfile and storefront package.json
-COPY package-lock.json ./
+# Copy root manifests
+COPY package.json package-lock.json ./
+# Copy storefront manifest
 COPY apps/storefront/package.json ./apps/storefront/
 
 # Install dependencies using workspaces
@@ -47,5 +48,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Note: server.js in standalone mode is inside the app directory
 CMD ["node", "apps/storefront/server.js"]
