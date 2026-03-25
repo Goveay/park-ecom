@@ -27,7 +27,7 @@ services:
       DB_TYPE: postgres
       DB_HOST: postgres
       DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
+      DB_USERNAME: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       API_PORT: 3000
       IS_DEV: "false"
@@ -55,7 +55,7 @@ services:
       DB_TYPE: postgres
       DB_HOST: postgres
       DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
+      DB_USERNAME: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - postgres
