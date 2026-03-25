@@ -1,5 +1,5 @@
-import {User} from 'lucide-react';
-import {Button} from '@/components/ui/button';
+import { User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,8 +8,8 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from "next/link";
-import {LoginButton} from "@/components/layout/navbar/login-button";
-import {getActiveCustomer} from "@/lib/vendure/actions";
+import { LoginButton } from "@/components/layout/navbar/login-button";
+import { getActiveCustomer } from "@/lib/vendure/actions";
 
 
 export async function NavbarUser() {
@@ -18,7 +18,7 @@ export async function NavbarUser() {
     if (!customer) {
         return (
             <Button variant="ghost" asChild>
-                <LoginButton isLoggedIn={false}/>
+                <LoginButton isLoggedIn={false} />
             </Button>
         );
     }
@@ -26,8 +26,8 @@ export async function NavbarUser() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost">
-                    <User className="h-5 w-5"/>
+                <Button variant="ghost" className="transition-all hover:bg-black/5 hover:scale-105 active:scale-95 font-semibold text-foreground">
+                    <User className="h-6 w-6 mr-1 stroke-[2px]" />
                     Hi, {customer.firstName}
                 </Button>
             </DropdownMenuTrigger>
@@ -38,9 +38,9 @@ export async function NavbarUser() {
                 <DropdownMenuItem asChild>
                     <Link href="/account/orders">Orders</Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator/>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <LoginButton isLoggedIn={true}/>
+                    <LoginButton isLoggedIn={true} />
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

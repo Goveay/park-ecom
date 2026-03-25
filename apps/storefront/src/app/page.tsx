@@ -1,22 +1,26 @@
 import type { Metadata } from "next";
 import { HeroSection } from "@/components/layout/hero-section";
 import { FeaturedProducts } from "@/components/commerce/featured-products";
+import { CategoryBanners } from "@/components/commerce/category-banners";
 import { FeaturedCategories } from "@/components/commerce/featured-categories";
-import { SITE_NAME, SITE_URL, buildCanonicalUrl } from "@/lib/metadata";
+import { SITE_NAME, SITE_URL, SITE_SLOGAN, buildCanonicalUrl } from "@/lib/metadata";
+import { DesignParkBanner } from "@/components/commerce/design-park-banner";
+import { ShieldCheck, Factory, Truck } from "lucide-react";
+import { HighlightProductsServer } from "@/components/commerce/highlight-products-server";
 
 export const metadata: Metadata = {
     title: {
-        absolute: `${SITE_NAME} - Your One-Stop Shop`,
+        absolute: `${SITE_NAME} | ${SITE_SLOGAN}`,
     },
     description:
-        "Discover high-quality products at competitive prices. Shop now for the best deals on electronics, fashion, home goods, and more.",
+        "Park Picasso ile çocuk oyun parkları, açık hava spor ekipmanları ve bahçe mobilyalarında kaliteyi keşfedin. Her oyun, bir sanat eseri.",
     alternates: {
         canonical: buildCanonicalUrl("/"),
     },
     openGraph: {
-        title: `${SITE_NAME} - Your One-Stop Shop`,
+        title: `${SITE_NAME} | ${SITE_SLOGAN}`,
         description:
-            "Discover high-quality products at competitive prices. Shop now for the best deals.",
+            "Park Picasso ile çocuk oyun parkları, açık hava spor ekipmanları ve bahçe mobilyalarında kaliteyi keşfedin.",
         type: "website",
         url: SITE_URL,
     },
@@ -32,47 +36,52 @@ export default async function Home(_props: PageProps<'/'>) {
                 <HeroSection />
             </Suspense>
             <FeaturedCategories />
+            <DesignParkBanner />
+            <CategoryBanners />
+            <HighlightProductsServer />
             <FeaturedProducts />
 
-            {/* You can add more sections here */}
-            <section className="py-16 bg-muted/30">
-                <div className="container mx-auto px-4">
-                    <div className="grid md:grid-cols-3 gap-8 text-center">
-                        <div className="space-y-3">
+            <section className="py-20 bg-muted/10">
+                <div className="container mx-auto px-4 max-w-6xl">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold tracking-tight mb-4">Neden Parkpicasso?</h2>
+                        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Sektördeki tecrübemiz ve kalite anlayışımızla projelerinize değer katıyoruz.</p>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Quality & Safety */}
+                        <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-background border border-border/60 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
                             <div
-                                className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-                                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                        d="M5 13l4 4L19 7" />
-                                </svg>
+                                className="shrink-0 flex items-center justify-center w-16 h-16 rounded-full mb-6 relative"
+                                style={{ background: 'radial-gradient(circle, rgba(34,197,94,0.15) 0%, rgba(34,197,94,0.05) 60%, transparent 100%)' }}
+                            >
+                                <ShieldCheck className="w-8 h-8 text-green-500 group-hover:scale-110 transition-transform duration-300" style={{ filter: 'drop-shadow(0 0 8px rgba(34,197,94,0.45))' }} />
                             </div>
-                            <h3 className="text-xl font-semibold">High Quality</h3>
-                            <p className="text-muted-foreground">Premium products carefully selected for you</p>
+                            <h3 className="text-xl font-semibold mb-3">Üstün Kalite ve Güvenlik</h3>
+                            <p className="text-muted-foreground leading-relaxed">Çocuklarınız ve sosyal alanlar için özenle tasarlanmış, test edilmiş, %100 memnuniyet garantili sertifikalı ürünler.</p>
                         </div>
-                        <div className="space-y-3">
+
+                        {/* Best Price */}
+                        <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-background border border-border/60 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
                             <div
-                                className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-                                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                className="shrink-0 flex items-center justify-center w-16 h-16 rounded-full mb-6 relative"
+                                style={{ background: 'radial-gradient(circle, rgba(156,163,175,0.15) 0%, rgba(156,163,175,0.05) 60%, transparent 100%)' }}
+                            >
+                                <Factory className="w-8 h-8 text-gray-500 group-hover:scale-110 transition-transform duration-300" style={{ filter: 'drop-shadow(0 0 8px rgba(156,163,175,0.45))' }} />
                             </div>
-                            <h3 className="text-xl font-semibold">Best Prices</h3>
-                            <p className="text-muted-foreground">Competitive pricing on all our products</p>
+                            <h3 className="text-xl font-semibold mb-3">Üreticiden En İyi Fiyat</h3>
+                            <p className="text-muted-foreground leading-relaxed">Aracıları ortadan kaldırarak birinci sınıf ahşap ve metal işçiliğini bütçenizi sarsmadan doğrudan size ulaştırıyoruz.</p>
                         </div>
-                        <div className="space-y-3">
+
+                        {/* Fast Shipping */}
+                        <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-background border border-border/60 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
                             <div
-                                className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-                                <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
+                                className="shrink-0 flex items-center justify-center w-16 h-16 rounded-full mb-6 relative"
+                                style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0.05) 60%, transparent 100%)' }}
+                            >
+                                <Truck className="w-8 h-8 text-blue-500 group-hover:scale-110 transition-transform duration-300" style={{ filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.45))' }} />
                             </div>
-                            <h3 className="text-xl font-semibold">Fast Delivery</h3>
-                            <p className="text-muted-foreground">Quick and reliable shipping worldwide</p>
+                            <h3 className="text-xl font-semibold mb-3">Güvenli ve Hızlı Nakliye</h3>
+                            <p className="text-muted-foreground leading-relaxed">Kapsamlı teslimat ve montaj ağımızla Türkiye ve dünyanın her yerine güvenle siparişlerinizi teslim ediyoruz.</p>
                         </div>
                     </div>
                 </div>

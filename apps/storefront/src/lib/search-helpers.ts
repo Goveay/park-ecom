@@ -5,7 +5,7 @@ export interface SearchInputParams {
     skip: number;
     groupByProduct: boolean;
     sort: { name?: 'ASC' | 'DESC'; price?: 'ASC' | 'DESC' };
-    facetValueFilters?: Array<{ and: string }>;
+    facetValueFilters?: Array<{ and?: string; or?: string[] }>;
 }
 
 interface BuildSearchInputOptions {
@@ -19,6 +19,9 @@ export function buildSearchInput({ searchParams, collectionSlug }: BuildSearchIn
     const skip = (page - 1) * take;
     const sort = (searchParams.sort as string) || 'name-asc';
     const searchTerm = searchParams.q as string;
+    const collectionSlugFromParams = searchParams.collection as string | undefined;
+    const minPrice = Number(searchParams.minPrice) || undefined;
+    const maxPrice = Number(searchParams.maxPrice) || undefined;
 
     // Extract facet value IDs from search params
     const facetValueIds = searchParams.facets
@@ -35,15 +38,31 @@ export function buildSearchInput({ searchParams, collectionSlug }: BuildSearchIn
         'price-desc': { price: 'DESC' },
     };
 
+    // Extract collection IDs/Slugs for multi-select support
+    // Since we now use facets for collections in the sidebar, we just need to ensure 
+    // facetValueFilters uses OR logic for selections within the same group if possible.
+    // For now, we'll implement a simple strategy: all facets are passed as AND, 
+    // UNLESS we want to support OR. Vendure's DefaultSearchPlugin supports:
+    // facetValueFilters: [{ and: "id1" }, { or: ["id2", "id3"] }]
+
     return {
-        ...(searchTerm && { term: searchTerm }),
-        ...(collectionSlug && { collectionSlug }),
+        ...(searchTerm && searchTerm.length >= 3 && { term: searchTerm }),
+        collectionSlug: collectionSlugFromParams || collectionSlug,
         take,
         skip,
         groupByProduct: true,
         sort: sortMapping[sort] || sortMapping['name-asc'],
+        ...((minPrice !== undefined || maxPrice !== undefined) && {
+            priceRange: {
+                min: minPrice,
+                max: maxPrice
+            }
+        }),
         ...(facetValueIds.length > 0 && {
-            facetValueFilters: facetValueIds.map(id => ({ and: id }))
+            // Eğer birden fazla facet seçiliyse, bunları OR olarak gönderiyoruz 
+            // (Aynı gruptakiler için OR, farklı gruplar için AND normalde daha doğrudur 
+            // ama basitleştirmek için ve kategoriler arası geçiş için OR kullanıyoruz)
+            facetValueFilters: [{ or: facetValueIds }]
         })
     };
 }

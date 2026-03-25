@@ -42,8 +42,8 @@ export async function HeroSection() {
     try {
         const { data } = await query(GetHeroSliderAssetsQuery, {}, { fetch: { cache: 'no-store' } });
 
-        if (data?.heroSliderImages && data.heroSliderImages.length > 0) {
-            const rawAssets = data.heroSliderImages as any[];
+        if ((data as any)?.heroSliderImages && (data as any).heroSliderImages.length > 0) {
+            const rawAssets = (data as any).heroSliderImages as any[];
             const slidesMap: Record<string, any> = {};
             let coverImageAsset: any = null;
 
@@ -138,12 +138,16 @@ export async function HeroSection() {
     const coverFocalPoint = (HeroSection as any).coverImage?.focalPoint;
 
     return (
-        <section className="relative overflow-hidden pt-24 pb-8 md:pt-32 md:pb-12">
+        <section className="z-10 relative pt-24 pb-4 md:pt-32 md:pb-6">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[500px] md:h-[650px]">
                     {/* Left Side: 75% - Slider */}
                     <div className="lg:col-span-3 relative h-full rounded-2xl overflow-hidden shadow-2xl group">
-                        <Carousel className="w-full h-full" opts={{ loop: true }}>
+                        <Carousel 
+                            className="w-full h-full" 
+                            opts={{ loop: true }}
+                            autoplay={{ delay: 5000 }}
+                        >
                             <CarouselContent className="h-full ml-0">
                                 {slides.map((slide: any) => (
                                     <CarouselItem key={slide.id} className="pl-0 h-full relative">

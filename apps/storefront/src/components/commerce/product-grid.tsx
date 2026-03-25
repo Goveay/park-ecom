@@ -1,54 +1,68 @@
-import {ResultOf} from '@/graphql';
-import {ProductCard} from './product-card';
-import {Pagination} from '@/components/shared/pagination';
-import {SortDropdown} from './sort-dropdown';
-import {SearchProductsQuery} from "@/lib/vendure/queries";
-import {getActiveChannel} from '@/lib/vendure/actions';
+import { ProductCard } from "@/components/commerce/product-card";
+import { readFragment } from "@/graphql";
+import { ProductCardFragment } from "@/lib/vendure/fragments";
+import { FragmentOf } from "@/graphql";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+import { SectionHeader } from "./section-header";
 
 interface ProductGridProps {
-    productDataPromise: Promise<{
-        data: ResultOf<typeof SearchProductsQuery>;
-        token?: string;
-    }>;
-    currentPage: number;
-    take: number;
+    title?: string;
+    subtitle?: string;
+    eyebrow?: string;
+    products?: Array<FragmentOf<typeof ProductCardFragment>>;
+    productDataPromise?: Promise<any>; // For search page
+    currentPage?: number;
+    take?: number;
+    viewAllLink?: string;
+    viewAllText?: string;
 }
 
-export async function ProductGrid({productDataPromise, currentPage, take}: ProductGridProps) {
-    const [result, channel] = await Promise.all([
-        productDataPromise,
-        getActiveChannel(),
-    ]);
+export async function ProductGrid({ 
+    title, 
+    subtitle,
+    eyebrow,
+    products, 
+    productDataPromise, 
+    viewAllLink, 
+    viewAllText = "Tümünü Gör" 
+}: ProductGridProps) {
+    let displayProducts = products;
 
-    const searchResult = result.data.search;
-    const totalPages = Math.ceil(searchResult.totalItems / take);
+    if (productDataPromise) {
+        const productData = await productDataPromise;
+        displayProducts = productData?.data?.search?.items || [];
+    }
 
-    if (!searchResult.items.length) {
-        return (
-            <div className="text-center py-12">
-                <p className="text-muted-foreground">No products found</p>
-            </div>
-        );
+    if (!displayProducts || displayProducts.length === 0) {
+        return null;
     }
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <p className="text-sm text-muted-foreground">
-                    {searchResult.totalItems} {searchResult.totalItems === 1 ? 'product' : 'products'}
-                </p>
-                <SortDropdown/>
+        <section className={title ? "py-16 md:py-24" : ""}>
+            <div className="container mx-auto px-4">
+                {title && (
+                    <SectionHeader 
+                        title={title}
+                        subtitle={subtitle}
+                        eyebrow={eyebrow}
+                        viewAllLink={viewAllLink}
+                        viewAllText={viewAllText}
+                    />
+                )}
+                
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+                    {displayProducts.map((p, i) => {
+                        const product = readFragment(ProductCardFragment, p);
+                        return (
+                            <div key={product.productId} className="h-full">
+                                <ProductCard product={p} />
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {searchResult.items.map((product, i) => (
-                    <ProductCard key={'product-grid-item' + i} product={product}/>
-                ))}
-            </div>
-
-            {totalPages > 1 && (
-                <Pagination currentPage={currentPage} totalPages={totalPages}/>
-            )}
-        </div>
+        </section>
     );
 }

@@ -47,13 +47,13 @@ export async function generateMetadata({
 
     if (!collection) {
         return {
-            title: 'Collection Not Found',
+            title: 'Koleksiyon Bulunamadı',
         };
     }
 
     const description =
         truncateDescription(collection.description) ||
-        `Browse our ${collection.name} collection at ${SITE_NAME}`;
+        `${collection.name} koleksiyonundaki ürünleri ${SITE_NAME} güvencesiyle keşfedin.`;
 
     return {
         title: collection.name,

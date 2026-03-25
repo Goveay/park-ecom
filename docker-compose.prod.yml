@@ -1,0 +1,85 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-vendure}
+      POSTGRES_USER: ${DB_USER:-vendure}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - ./data/redis:/data
+
+  # Vendure API Server
+  server:
+    build: 
+      context: ./apps/server
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: postgres
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      API_PORT: 3000
+      IS_DEV: "false"
+      # IMPORTANT: Add your secret keys here
+      COOKIE_SECRET: ${COOKIE_SECRET}
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/server/static-assets:/usr/src/app/static-assets
+
+  # Vendure Worker
+  worker:
+    build: 
+      context: ./apps/server
+      dockerfile: Dockerfile
+    command: npm run dev:worker
+    restart: always
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: postgres
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - postgres
+      - redis
+
+  # Storefront (Next.js)
+  storefront:
+    build:
+      context: ./apps/storefront
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_VENDURE_API_URL: https://api.parkpicasso.com/shop-api
+    restart: always
+    ports:
+      - "3001:3000"
+    depends_on:
+      - server
+
+  # Management Panel
+  management:
+    build:
+      context: ./managment
+      dockerfile: Dockerfile
+      args:
+        VITE_VENDURE_API_URL: https://api.parkpicasso.com/shop-api
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - server

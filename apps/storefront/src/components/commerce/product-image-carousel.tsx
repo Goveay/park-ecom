@@ -4,6 +4,11 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface ProductImageCarouselProps {
     images: Array<{
@@ -35,15 +40,33 @@ export function ProductImageCarousel({ images }: ProductImageCarouselProps) {
     return (
         <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative aspect-square bg-muted rounded-lg overflow-hidden group">
-                <Image
-                    src={images[currentIndex].source}
-                    alt={`Product image ${currentIndex + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority={currentIndex === 0}
-                />
+            <div className="relative aspect-square bg-white rounded-lg overflow-hidden group border border-border/40">
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <div className="relative w-full h-full cursor-zoom-in">
+                            <Image
+                                src={images[currentIndex].source}
+                                alt={`Product image ${currentIndex + 1}`}
+                                fill
+                                className="object-contain p-2"
+                                sizes="(max-width: 1024px) 100vw, 50vw"
+                                priority={currentIndex === 0}
+                            />
+                        </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-[95vw] w-full h-[90vh] p-0 overflow-hidden bg-white/95 backdrop-blur-sm border-none shadow-2xl flex items-center justify-center">
+                        <div className="relative w-full h-full p-4 md:p-12">
+                            <Image
+                                src={images[currentIndex].source}
+                                alt={`Full resolution product image ${currentIndex + 1}`}
+                                fill
+                                className="object-contain"
+                                sizes="95vw"
+                                priority
+                            />
+                        </div>
+                    </DialogContent>
+                </Dialog>
 
                 {/* Navigation Arrows */}
                 {images.length > 1 && (

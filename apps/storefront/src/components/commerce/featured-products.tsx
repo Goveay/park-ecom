@@ -1,35 +1,53 @@
-import { ProductCarousel } from "@/components/commerce/product-carousel";
+import { ProductGrid } from "@/components/commerce/product-grid";
 import { cacheLife } from "next/cache";
 import { query } from "@/lib/vendure/api";
-import { GetCollectionProductsQuery } from "@/lib/vendure/queries";
+import { SearchProductsQuery, GetProductDetailQuery } from "@/lib/vendure/queries";
+import { readFragment } from "@/graphql";
+import { ProductCardFragment } from "@/lib/vendure/fragments";
 
-async function getFeaturedCollectionProducts() {
+async function getLatestProducts() {
     'use cache'
     cacheLife('days')
 
-    // Fetch featured products from a specific collection
-    // Replace 'featured' with your actual collection slug
-    const result = await query(GetCollectionProductsQuery, {
-        slug: "vitrin",
+    // Fetch latest 8 products
+    const result = await query(SearchProductsQuery, {
         input: {
-            collectionSlug: "vitrin",
-            take: 12,
+            take: 8,
             skip: 0,
-            groupByProduct: true
+            groupByProduct: true,
+            // Vendure usually sorts by relevance or ID by default. 
+            // If the plugin supports it, id: DESC would be better.
         }
     });
 
-    return result.data.search.items;
+    const items = result.data.search.items;
+
+    // Fetch full product details to get variants and their images
+    const itemsWithVariants = await Promise.all(
+        items.map(async (item) => {
+             const parsedItem = readFragment(ProductCardFragment, item);
+             const productDetail = await query(GetProductDetailQuery, { slug: parsedItem.slug });
+             return {
+                 ...item,
+                 variants: productDetail.data.product?.variants || []
+             };
+         })
+    );
+
+    return itemsWithVariants;
 }
 
-
 export async function FeaturedProducts() {
-    const products = await getFeaturedCollectionProducts();
+    const products = await getLatestProducts();
 
     return (
-        <ProductCarousel
-            title="Featured Products"
+        <ProductGrid
+            title="Oyun Başlasın!"
+            subtitle="Hayal gücünü geliştiren, en eğlenceli ve güvenli oyun parklarımız burada!"
+            eyebrow="Yeni Maceralar"
             products={products}
+            viewAllLink="/search"
+            viewAllText="Hepsini Keşfet"
         />
     )
 }

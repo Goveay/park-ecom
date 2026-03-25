@@ -3,7 +3,7 @@ import { ActiveCustomerFragment, ProductCardFragment } from './fragments';
 
 export const GetTopCollectionsQuery = graphql(`
     query GetTopCollections {
-        collections(options: { filter: { parentId: { eq: "1" } } }) {
+        collections(options: { topLevelOnly: true, take: 20 }) {
             items {
                 id
                 name
@@ -44,6 +44,14 @@ export const SearchProductsQuery = graphql(`
                     }
                 }
             }
+            collections {
+                count
+                collection {
+                    id
+                    name
+                    slug
+                }
+            }
         }
     }
 `, [ProductCardFragment]);
@@ -66,6 +74,11 @@ export const GetProductDetailQuery = graphql(`
                 sku
                 priceWithTax
                 stockLevel
+                featuredAsset {
+                    id
+                    preview
+                    source
+                }
                 options {
                     id
                     code
@@ -95,6 +108,9 @@ export const GetProductDetailQuery = graphql(`
                 parent {
                     id
                 }
+            }
+            customFields {
+                shortDescription
             }
         }
     }
@@ -454,6 +470,38 @@ export const GetHeroSliderAssetsQuery = graphql(`
             }
             tags {
                 value
+            }
+        }
+    }
+`);
+
+export const GetMaxPriceQuery = graphql(`
+    query GetMaxPrice {
+        search(input: { sort: { price: DESC }, take: 1 }) {
+            items {
+                priceWithTax {
+                    ... on PriceRange {
+                        max
+                    }
+                    ... on SinglePrice {
+                        value
+                    }
+                }
+            }
+        }
+    }
+`);
+
+export const GetFacetValuesQuery = graphql(`
+    query GetFacetValues {
+        facets(options: { take: 100 }) {
+            items {
+                id
+                name
+                values {
+                    id
+                    name
+                }
             }
         }
     }

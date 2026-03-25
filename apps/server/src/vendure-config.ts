@@ -4,6 +4,7 @@ import {
     DefaultSchedulerPlugin,
     DefaultSearchPlugin,
     VendureConfig,
+    LanguageCode,
 } from '@vendure/core';
 import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
 import { AssetServerPlugin } from '@vendure/asset-server-plugin';
@@ -22,6 +23,12 @@ export const config: VendureConfig = {
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',
         trustProxy: IS_DEV ? false : 1,
+        cors: {
+            origin: IS_DEV
+                ? ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3001']
+                : ['https://www.parkpicasso.com', 'https://manage.parkpicasso.com'],
+            credentials: true,
+        },
         // The following options are useful in development mode,
         // but are best turned off for production for security
         // reasons.
@@ -44,9 +51,9 @@ export const config: VendureConfig = {
         type: 'postgres',
         // See the README.md "Migrations" section for an explanation of
         // the `synchronize` and `migrations` options.
-        synchronize: false,
+        synchronize: true,
         migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
-        logging: false,
+        logging: true,
         database: process.env.DB_NAME,
         schema: process.env.DB_SCHEMA,
         host: process.env.DB_HOST,
@@ -59,7 +66,19 @@ export const config: VendureConfig = {
     },
     // When adding or altering custom field definitions, the database will
     // need to be updated. See the "Migrations" section in README.md.
-    customFields: {},
+    customFields: {
+        Product: [
+            {
+                name: 'shortDescription',
+                type: 'text',
+                label: [
+                    { languageCode: LanguageCode.tr, value: 'Kısa Açıklama' },
+                    { languageCode: LanguageCode.en, value: 'Short Description' },
+                ],
+                public: true,
+            },
+        ],
+    },
     plugins: [
         HeroSliderPlugin,
         GraphiqlPlugin.init(),

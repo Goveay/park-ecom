@@ -14,8 +14,8 @@ import {getActiveCustomer} from '@/lib/vendure/actions';
 import {getAvailableCountriesCached} from '@/lib/vendure/cached';
 
 export const metadata: Metadata = {
-    title: 'Checkout',
-    description: 'Complete your purchase.',
+    title: 'Ödeme',
+    description: 'Alışverişinizi güvenle tamamlayın.',
     robots: noIndexRobots(),
 };
 
@@ -53,8 +53,8 @@ export default async function CheckoutPage(_props: PageProps<'/checkout'>) {
         paymentMethodsRes.data.eligiblePaymentMethods?.filter((m) => m.isEligible) || [];
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+        <div className="container mx-auto px-4 py-8 mt-16">
+            <h1 className="text-3xl font-bold mb-8">Ödeme</h1>
             <CheckoutProvider
                 order={activeOrder}
                 addresses={addresses}

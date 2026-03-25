@@ -9,6 +9,11 @@ export const ProductCardFragment = graphql(`
             id
             preview
         }
+        productVariantId
+        productVariantAsset {
+            id
+            preview
+        }
         priceWithTax {
             __typename
             ... on PriceRange {

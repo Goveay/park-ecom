@@ -1,7 +1,7 @@
 import { ProductCarousel } from "@/components/commerce/product-carousel";
 import { cacheLife, cacheTag } from "next/cache";
 import { query } from "@/lib/vendure/api";
-import { GetCollectionProductsQuery } from "@/lib/vendure/queries";
+import { GetCollectionProductsQuery, GetProductDetailQuery } from "@/lib/vendure/queries";
 import { readFragment } from "@/graphql";
 import { ProductCardFragment } from "@/lib/vendure/fragments";
 
@@ -26,12 +26,26 @@ async function getRelatedProducts(collectionSlug: string, currentProductId: stri
     });
 
     // Filter out the current product and limit to 12
-    return result.data.search.items
+    const filteredItems = result.data.search.items
         .filter(item => {
             const product = readFragment(ProductCardFragment, item);
             return product.productId !== currentProductId;
         })
         .slice(0, 12);
+
+    // Fetch variants for these related products
+    const itemsWithVariants = await Promise.all(
+        filteredItems.map(async (item) => {
+             const parsedItem = readFragment(ProductCardFragment, item);
+             const productDetail = await query(GetProductDetailQuery, { slug: parsedItem.slug });
+             return {
+                 ...item,
+                 variants: productDetail.data.product?.variants || []
+             };
+        })
+    );
+
+    return itemsWithVariants;
 }
 
 export async function RelatedProducts({ collectionSlug, currentProductId }: RelatedProductsProps) {
@@ -43,7 +57,7 @@ export async function RelatedProducts({ collectionSlug, currentProductId }: Rela
 
     return (
         <ProductCarousel
-            title="Related Products"
+            title="Bunları da Beğenebilirsiniz"
             products={products}
         />
     );
