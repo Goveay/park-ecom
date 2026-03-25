@@ -35,11 +35,21 @@ export default async function Home(_props: PageProps<'/'>) {
             <Suspense fallback={<HeroSkeleton />}>
                 <HeroSection />
             </Suspense>
-            <FeaturedCategories />
-            <DesignParkBanner />
-            <CategoryBanners />
-            <HighlightProductsServer />
-            <FeaturedProducts />
+            <Suspense fallback={<div className="h-40 animate-pulse bg-muted/20" />}>
+                <FeaturedCategories />
+            </Suspense>
+            <Suspense fallback={<div className="h-60 animate-pulse bg-muted/20" />}>
+                <DesignParkBanner />
+            </Suspense>
+            <Suspense fallback={<div className="h-80 animate-pulse bg-muted/20" />}>
+                <CategoryBanners />
+            </Suspense>
+            <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20" />}>
+                <HighlightProductsServer />
+            </Suspense>
+            <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20" />}>
+                <FeaturedProducts />
+            </Suspense>
 
             <section className="py-20 bg-muted/10">
                 <div className="container mx-auto px-4 max-w-6xl">

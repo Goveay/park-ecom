@@ -40,7 +40,7 @@ export async function HeroSection() {
     let slides = FALLBACK_SLIDES;
 
     try {
-        const { data } = await query(GetHeroSliderAssetsQuery, {}, { fetch: { cache: 'no-store' } });
+        const { data } = await query(GetHeroSliderAssetsQuery, {}, { fetch: { next: { revalidate: 3600 } } });
 
         if ((data as any)?.heroSliderImages && (data as any).heroSliderImages.length > 0) {
             const rawAssets = (data as any).heroSliderImages as any[];

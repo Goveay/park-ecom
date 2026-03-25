@@ -43,7 +43,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./apps/server/static-assets:/usr/src/app/static-assets
+      - ./apps/server/static:/usr/src/app/static
 
   # Vendure Worker
   worker:
