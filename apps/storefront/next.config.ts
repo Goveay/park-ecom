@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
             },
             {
                 hostname: 'images.unsplash.com'
+            },
+            {
+                hostname: 'api.parkpicasso.com'
             }
         ],
     },
