@@ -22,7 +22,7 @@ services:
     build: 
       context: .
       dockerfile: apps/server/Dockerfile
-    image: park-picasso-server:v2
+    image: park-picasso-server:prod
     restart: always
     environment:
       DB_TYPE: postgres
@@ -50,7 +50,7 @@ services:
     build: 
       context: .
       dockerfile: apps/server/Dockerfile
-    image: park-picasso-worker:v2
+    image: park-picasso-worker:prod
     command: npm run start:worker -w server
     restart: always
     environment:
@@ -70,7 +70,7 @@ services:
       dockerfile: apps/storefront/Dockerfile
       args:
         NEXT_PUBLIC_VENDURE_SHOP_API_URL: https://api.parkpicasso.com/shop-api
-    image: park-picasso-storefront:v2
+    image: park-picasso-storefront:prod
     environment:
       VENDURE_SHOP_API_URL: http://server:3000/shop-api
     restart: always
@@ -86,7 +86,7 @@ services:
       dockerfile: managment/Dockerfile
       args:
         VITE_VENDURE_API_URL: https://api.parkpicasso.com/shop-api
-    image: park-picasso-management:v2
+    image: park-picasso-management:prod
     restart: always
     ports:
       - "5173:80"

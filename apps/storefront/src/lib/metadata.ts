@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
-export const SITE_NAME = 'PARK PICASSO DEBUG';
+export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || 'Park Picasso';
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.parkpicasso.com';
-export const SITE_SLOGAN = 'DEBUG MODE ACTIVE';
+export const SITE_SLOGAN = 'Her Oyun, Bir Sanat Eseri';
 
 /**
  * Truncate text to a maximum length, preserving word boundaries.
