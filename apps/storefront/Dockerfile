@@ -8,8 +8,10 @@ WORKDIR /app
 
 # Copy root manifests
 COPY package.json package-lock.json ./
-# Copy storefront manifest
+# Copy all package manifests for workspace resolution
+COPY apps/server/package.json ./apps/server/
 COPY apps/storefront/package.json ./apps/storefront/
+COPY managment/package.json ./managment/
 
 # Install dependencies using workspaces
 RUN npm ci
@@ -27,6 +29,9 @@ ENV NEXT_PUBLIC_VENDURE_SHOP_API_URL=$NEXT_PUBLIC_VENDURE_SHOP_API_URL
 ENV NEXT_PUBLIC_VENDURE_ASSET_URL=$NEXT_PUBLIC_VENDURE_ASSET_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--max-old-space-size=1536"
+
+# Force dynamic rendering at build stage to avoid API connection issues
+ENV NEXT_PHASE=phase-production-build
 
 RUN npm run build -w storefront
 
