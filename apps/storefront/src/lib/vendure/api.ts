@@ -67,16 +67,27 @@ export async function query<TResult, TVariables>(
     // Set the channel token header (use provided channelToken or default)
     headers[VENDURE_CHANNEL_TOKEN_HEADER] = channelToken || VENDURE_CHANNEL_TOKEN;
 
-    const response = await fetch(VENDURE_API_URL!, {
-        ...fetchOptions,
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-            query: print(document),
-            variables: variables || {},
-        }),
-        ...(tags && {next: {tags}}),
-    });
+    let response: Response;
+    try {
+        response = await fetch(VENDURE_API_URL!, {
+            ...fetchOptions,
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                query: print(document),
+                variables: variables || {},
+            }),
+            ...(tags && {next: {tags}}),
+        });
+    } catch (e: any) {
+        // If we are in build phase, don't crash the whole build if the API is down/unreachable
+        // (common during initial Docker deployment before DNS is ready)
+        if (process.env.NEXT_PHASE === 'phase-production-build' || (e as any).code === 'ENOTFOUND') {
+            console.warn(`[Build Warning] Failed to reach Vendure API (${VENDURE_API_URL}): ${e.message}. Returning empty data for pre-rendering.`);
+            return { data: {} as TResult };
+        }
+        throw e;
+    }
 
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
