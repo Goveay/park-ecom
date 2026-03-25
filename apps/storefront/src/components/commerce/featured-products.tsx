@@ -20,7 +20,7 @@ async function getLatestProducts() {
         }
     });
 
-    const items = result.data.search.items;
+    const items = (result.data as any)?.search?.items || [];
 
     // Fetch full product details to get variants and their images
     const itemsWithVariants = await Promise.all(
