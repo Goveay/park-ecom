@@ -30,8 +30,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PRIVATE_STANDALONE=true
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-# Run build across all workspaces or just storefront
-RUN npm run build -w storefront -- --no-lint
+# Run build and CAPTURE logs to show them in case of failure
+RUN npm run build -w storefront > build.log 2>&1 || (cat build.log && exit 1)
 
 # Final setup
 EXPOSE 3000
