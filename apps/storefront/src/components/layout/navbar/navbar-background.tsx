@@ -32,7 +32,7 @@ export function NavbarBackground({ children }: { children: React.ReactNode }) {
         <header 
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 transform 
                 ${isVisible ? 'translate-y-0' : '-translate-y-full'} 
-                bg-background border-b border-border shadow-md`}
+                bg-white border-b border-border shadow-md text-slate-900`}
         >
             {children}
             {/* Authentic Segmented Line */}

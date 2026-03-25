@@ -40,9 +40,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/standalone 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/static ./apps/storefront/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/public ./apps/storefront/public
 
-# Standalone copies sometimes need these at the root as well
+# Standalone copies sometimes need these at the root AS WELL
+# for direct file serving via path resolution
 COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/public ./apps/storefront/.next/standalone/public
 
 USER nextjs
 
