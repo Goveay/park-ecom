@@ -35,11 +35,14 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/apps/storefront/public ./public
-
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/static ./apps/storefront/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/public ./apps/storefront/public
+
+# Standalone copies sometimes need these at the root as well
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/public ./public
 
 USER nextjs
 
