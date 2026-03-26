@@ -29,8 +29,6 @@ export const metadata: Metadata = {
 import { Suspense } from "react";
 import { HeroSkeleton } from "@/components/layout/hero-skeleton";
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 export default async function Home() {
     return (
