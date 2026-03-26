@@ -1,43 +1,60 @@
-FROM node:20-alpine
+FROM node:22-alpine AS base
 
 # Install system dependencies
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy ALL manifests first for clean workspace resolution
+# --- Dependencies Stage ---
+FROM base AS deps
+
+# Copy ALL manifests for workspace resolution
 COPY package.json package-lock.json ./
 COPY apps/server/package.json ./apps/server/
 COPY apps/storefront/package.json ./apps/storefront/
 COPY managment/package.json ./managment/
 
-# Install ALL dependencies
+# Install ALL dependencies (need devDeps for build)
 RUN npm ci
 
-# Copy the entire monorepo
+# --- Build Stage ---
+FROM base AS builder
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/apps/storefront/node_modules ./apps/storefront/node_modules
 COPY . .
 
-# Build-time ARGs for Next.js
+# Build-time ARGs for Next.js (must be available at build time)
 ARG NEXT_PUBLIC_VENDURE_SHOP_API_URL
 ARG NEXT_PUBLIC_VENDURE_ASSET_URL
 ENV NEXT_PUBLIC_VENDURE_SHOP_API_URL=$NEXT_PUBLIC_VENDURE_SHOP_API_URL
 ENV NEXT_PUBLIC_VENDURE_ASSET_URL=$NEXT_PUBLIC_VENDURE_ASSET_URL
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_OPTIONS="--max-old-space-size=2048"
-
-# Force build to be production and skip non-critical checks
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NEXT_PRIVATE_STANDALONE=true
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
-# Run build and CAPTURE logs to show them in case of failure
-RUN npm run build -w storefront > build.log 2>&1 || (cat build.log && exit 1)
+# Build storefront
+RUN npm run build -w storefront
 
-# Final setup
+# --- Production Stage ---
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy standalone output
+COPY --from=builder /app/apps/storefront/public ./apps/storefront/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/storefront/.next/static ./apps/storefront/.next/static
+
+USER nextjs
+
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Note: In standalone mode, Next.js generates server.js 
-# but for a single-stage simple build, we can use next start
-CMD ["npm", "run", "start", "-w", "storefront"]
+# Use the standalone server.js directly
+CMD ["node", "apps/storefront/server.js"]

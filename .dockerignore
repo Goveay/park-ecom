@@ -6,5 +6,10 @@ data
 .env
 .env.local
 .env.prod
-npm-debug.log
+*.log
 docker-compose.override.yml
+.dockerignore
+README.md
+*.md
+check-*.js
+debug-*.js
