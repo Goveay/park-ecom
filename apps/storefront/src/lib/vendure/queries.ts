@@ -18,6 +18,61 @@ export const GetTopCollectionsQuery = graphql(`
     }
 `);
 
+export const GetCollectionsWithChildrenQuery = graphql(`
+    query GetCollectionsWithChildren {
+        collections(options: { topLevelOnly: true, take: 20 }) {
+            items {
+                id
+                name
+                slug
+                featuredAsset {
+                    id
+                    preview
+                    source
+                }
+                children {
+                    id
+                    name
+                    slug
+                    featuredAsset {
+                        id
+                        preview
+                    }
+                }
+            }
+        }
+    }
+`);
+
+export const GetCollectionWithChildrenQuery = graphql(`
+    query GetCollectionWithChildren($slug: String!) {
+        collection(slug: $slug) {
+            id
+            name
+            slug
+            description
+            featuredAsset {
+                id
+                preview
+            }
+            parent {
+                id
+                name
+                slug
+            }
+            children {
+                id
+                name
+                slug
+                featuredAsset {
+                    id
+                    preview
+                }
+            }
+        }
+    }
+`);
+
 export const GetActiveCustomerQuery = graphql(`
     query GetActiveCustomer {
         activeCustomer {
@@ -446,6 +501,20 @@ export const GetCollectionProductsQuery = graphql(`
             featuredAsset {
                 id
                 preview
+            }
+            parent {
+                id
+                name
+                slug
+            }
+            children {
+                id
+                name
+                slug
+                featuredAsset {
+                    id
+                    preview
+                }
             }
         }
         search(input: $input) {
