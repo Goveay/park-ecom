@@ -17,6 +17,9 @@ COPY apps/server/ ./apps/server/
 
 # Build the server (tsc)
 RUN npm run build -w server
+# Build the dashboard (vite build) with production API URL
+ARG VITE_VENDURE_API_URL=https://api.parkpicasso.com/admin-api
+RUN VITE_VENDURE_API_URL=${VITE_VENDURE_API_URL} npm run build:dashboard -w server
 
 # --- Production Stage ---
 FROM node:22-alpine AS runner
