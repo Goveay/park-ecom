@@ -1,5 +1,5 @@
 import {query} from './api';
-import {GetActiveChannelQuery, GetAvailableCountriesQuery, GetTopCollectionsQuery, GetCollectionsWithChildrenQuery} from './queries';
+import {GetActiveChannelQuery, GetAvailableCountriesQuery, GetTopCollectionsQuery} from './queries';
 
 /**
  * Get the active channel.
@@ -22,13 +22,5 @@ export async function getAvailableCountriesCached() {
  */
 export async function getTopCollections() {
     const result = await query(GetTopCollectionsQuery);
-    return (result.data as any)?.collections?.items ?? [];
-}
-
-/**
- * Get top-level collections with their children (subcollections).
- */
-export async function getCollectionsWithChildren() {
-    const result = await query(GetCollectionsWithChildrenQuery);
     return (result.data as any)?.collections?.items ?? [];
 }
