@@ -40,7 +40,7 @@ export async function HeroSection() {
     let slides = FALLBACK_SLIDES;
 
     try {
-        const { data } = await query(GetHeroSliderAssetsQuery, {}, { fetch: { next: { revalidate: 3600 } } });
+        const { data } = await query(GetHeroSliderAssetsQuery, {}, { fetch: { next: { revalidate: 10 } } });
 
         if ((data as any)?.heroSliderImages && (data as any).heroSliderImages.length > 0) {
             const rawAssets = (data as any).heroSliderImages as any[];
@@ -140,7 +140,7 @@ export async function HeroSection() {
     return (
         <section className="z-10 relative pt-24 pb-4 md:pt-32 md:pb-6">
             <div className="container mx-auto px-4 md:px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[500px] md:h-[650px]">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[550px] sm:h-[600px] md:h-[650px]">
                     {/* Left Side: 75% - Slider */}
                     <div className="lg:col-span-3 relative h-full rounded-2xl overflow-hidden shadow-2xl group">
                         <Carousel 
@@ -172,11 +172,13 @@ export async function HeroSection() {
                                                 src={slide.mobile?.image || slide.desktop?.image || (slide as any).image}
                                                 alt={slide.alt}
                                                 fill
-                                                className="object-cover"
-                                                style={{
+                                                 className="object-cover md:object-cover"
+                                                 style={{
                                                     objectPosition: slide.mobile?.focalPoint
                                                         ? `${slide.mobile.focalPoint.x * 100}% ${slide.mobile.focalPoint.y * 100}%`
-                                                        : '65% center' // Default mobile shift if no focal point
+                                                        : (slide.id === '1' || (slide as any).name?.includes('slide-1'))
+                                                            ? 'center bottom' // Slide 1: Focus on the bottom-oriented mobile image
+                                                            : '85% center'    // Slide 2: Shift right to see the child's face and hand
                                                 }}
                                                 priority={slide.id === slides[0].id}
                                             />

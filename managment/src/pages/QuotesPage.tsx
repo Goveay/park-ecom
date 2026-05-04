@@ -329,14 +329,21 @@ const QuotesPage: React.FC = () => {
     return calculateSubtotal() + calculateTax();
   };
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number, currency: string = formData.currency || 'TRY') => {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: 'TRY',
+      currency: currency,
     }).format(amount);
   };
 
   const generatePDF = (quote: Quote) => {
+    const formatQuoteCurrency = (amount: number) => {
+      return new Intl.NumberFormat('tr-TR', {
+        style: 'currency',
+        currency: quote.currency || 'TRY',
+      }).format(amount);
+    };
+
     const customer = customers.find(c => c.id === quote.customerId);
     if (!customer) return;
     
@@ -453,9 +460,9 @@ const QuotesPage: React.FC = () => {
           (index + 1).toString(),
           '', // Resim sütunu boş bırakılır, didDrawCell'de eklenir
           '', // Ürün adı ve açıklama tamamen didDrawCell'de manuel olarak yazılır
-          formatCurrency(item.price),
+          formatQuoteCurrency(item.price),
           item.quantity.toString(),
-          formatCurrency(total)
+          formatQuoteCurrency(total)
         ];
       });
 
@@ -718,7 +725,7 @@ const QuotesPage: React.FC = () => {
          doc.setFont('Calibri', 'bold');
          doc.text('Ara Toplam:', 140, newPageStartY, { align: 'right' });
          doc.setFont('Calibri', 'normal');
-         doc.text(formatCurrency(calculateQuoteSubtotal()), 190, newPageStartY, { align: 'right' });
+         doc.text(formatQuoteCurrency(calculateQuoteSubtotal()), 190, newPageStartY, { align: 'right' });
          
          // Separator çizgisi - Ara Toplam ile KDV arası
          doc.setDrawColor(180, 180, 180);
@@ -728,7 +735,7 @@ const QuotesPage: React.FC = () => {
          doc.setFont('Calibri', 'bold');
          doc.text(`KDV (${quote.vatRate}%):`, 140, newPageStartY + 10, { align: 'right' });
          doc.setFont('Calibri', 'normal');
-         doc.text(formatCurrency(calculateQuoteTax()), 190, newPageStartY + 10, { align: 'right' });
+         doc.text(formatQuoteCurrency(calculateQuoteTax()), 190, newPageStartY + 10, { align: 'right' });
          
          // Separator çizgisi - KDV ile Genel Toplam arası
          doc.setDrawColor(180, 180, 180);
@@ -800,7 +807,7 @@ const QuotesPage: React.FC = () => {
          doc.setFont('Calibri', 'bold');
          doc.text('Ara Toplam:', 140, finalY, { align: 'right' });
          doc.setFont('Calibri', 'normal');
-         doc.text(formatCurrency(calculateQuoteSubtotal()), 190, finalY, { align: 'right' });
+         doc.text(formatQuoteCurrency(calculateQuoteSubtotal()), 190, finalY, { align: 'right' });
          
          // Separator çizgisi - Ara Toplam ile KDV arası
          doc.setDrawColor(180, 180, 180);
@@ -810,7 +817,7 @@ const QuotesPage: React.FC = () => {
          doc.setFont('Calibri', 'bold');
          doc.text(`KDV (${quote.vatRate}%):`, 140, finalY + 10, { align: 'right' });
          doc.setFont('Calibri', 'normal');
-         doc.text(formatCurrency(calculateQuoteTax()), 190, finalY + 10, { align: 'right' });
+         doc.text(formatQuoteCurrency(calculateQuoteTax()), 190, finalY + 10, { align: 'right' });
          
          // Separator çizgisi - KDV ile Genel Toplam arası
          doc.setDrawColor(180, 180, 180);
@@ -1554,7 +1561,7 @@ const QuotesPage: React.FC = () => {
 
               <div className="flex items-center text-sm text-gray-600">
                 <DollarSign className="h-4 w-4 mr-2" />
-                <span className="font-semibold text-green-600">{formatCurrency(quote.total)}</span>
+                <span className="font-semibold text-green-600">{formatCurrency(quote.total, quote.currency)}</span>
               </div>
             </div>
 
@@ -1745,6 +1752,21 @@ const QuotesPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
                       className="input-field"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Para Birimi
+                    </label>
+                    <select
+                      value={formData.currency || 'TRY'}
+                      onChange={(e) => setFormData({ ...formData, currency: e.target.value as 'TRY' | 'USD' | 'EUR' })}
+                      className="input-field"
+                    >
+                      <option value="TRY">₺ (TL)</option>
+                      <option value="USD">$ (USD)</option>
+                      <option value="EUR">€ (EUR)</option>
+                    </select>
                   </div>
                 </div>
 

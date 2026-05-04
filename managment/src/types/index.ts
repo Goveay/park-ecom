@@ -151,6 +151,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  currency?: 'TRY' | 'USD' | 'EUR'; // Fiyat para birimi eklendi
   stock: number;
   category: string;
   sku: string;
@@ -227,6 +228,7 @@ export interface Quote {
   vatRate: number;
   vatAmount: number;
   total: number;
+  currency?: 'TRY' | 'USD' | 'EUR'; // Teklif para birimi eklendi
   status: 'draft' | 'sent' | 'accepted' | 'rejected';
   validUntil: string;
   notes: string;

@@ -87,16 +87,18 @@ const CustomersPage: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.phone) {
-      alert('Lütfen tüm gerekli alanları doldurun');
+    if (!formData.name) {
+      alert('Lütfen müşteri adını girin');
       return;
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      alert('Lütfen geçerli bir e-posta adresi girin');
-      return;
+    // Basic email validation if provided
+    if (formData.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        alert('Lütfen geçerli bir e-posta adresi girin');
+        return;
+      }
     }
 
     try {
@@ -637,7 +639,7 @@ const CustomersPage: React.FC = () => {
 
                 <div>
                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      E-posta Adresi *
+                      E-posta Adresi
                     </label>
                     <input
                       type="email"
@@ -645,13 +647,12 @@ const CustomersPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="input-field"
                       placeholder="E-posta adresi girin"
-                      required
                     />
                 </div>
 
                 <div>
                                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Telefon Numarası *
+                      Telefon Numarası
                     </label>
                     <input
                       type="tel"
@@ -659,7 +660,6 @@ const CustomersPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="input-field"
                       placeholder="Telefon numarası girin"
-                      required
                     />
                 </div>
 

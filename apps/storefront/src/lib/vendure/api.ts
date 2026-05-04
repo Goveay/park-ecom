@@ -3,6 +3,7 @@ import {print} from 'graphql';
 import {getAuthToken} from '@/lib/auth';
 
 const VENDURE_API_URL = process.env.VENDURE_SHOP_API_URL || process.env.NEXT_PUBLIC_VENDURE_SHOP_API_URL;
+const VENDURE_INTERNAL_API_URL = process.env.VENDURE_INTERNAL_API_URL;
 const VENDURE_CHANNEL_TOKEN = process.env.VENDURE_CHANNEL_TOKEN || process.env.NEXT_PUBLIC_VENDURE_CHANNEL_TOKEN || '__default_channel__';
 const VENDURE_AUTH_TOKEN_HEADER = process.env.VENDURE_AUTH_TOKEN_HEADER || 'vendure-auth-token';
 const VENDURE_CHANNEL_TOKEN_HEADER = process.env.VENDURE_CHANNEL_TOKEN_HEADER || 'vendure-token';
@@ -69,7 +70,10 @@ export async function query<TResult, TVariables>(
 
     let response: Response;
     try {
-        response = await fetch(VENDURE_API_URL!, {
+        const isServer = typeof window === 'undefined';
+        const fetchUrl = (isServer && VENDURE_INTERNAL_API_URL) ? VENDURE_INTERNAL_API_URL : VENDURE_API_URL!;
+        
+        response = await fetch(fetchUrl, {
             ...fetchOptions,
             method: 'POST',
             headers,

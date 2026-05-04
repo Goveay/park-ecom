@@ -9,6 +9,7 @@ import {
 import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
 import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
+import { DefaultLogger, LogLevel } from '@vendure/core';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
 import { HeroSliderPlugin } from './plugins/hero-slider.plugin';
 import 'dotenv/config';
@@ -26,7 +27,7 @@ export const config: VendureConfig = {
         cors: {
             origin: IS_DEV
                 ? ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3001']
-                : ['https://www.parkpicasso.com', 'https://manage.parkpicasso.com'],
+                : ['https://www.parkpicasso.com', 'https://manage.parkpicasso.com', 'https://api.parkpicasso.com'],
             credentials: true,
         },
         // The following options are useful in development mode,
@@ -115,4 +116,5 @@ export const config: VendureConfig = {
                 : path.join(__dirname, 'dashboard'),
         }),
     ],
+    logger: new DefaultLogger({ level: LogLevel.Verbose }),
 };

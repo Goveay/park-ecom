@@ -9,6 +9,7 @@ interface ProductFormData {
   name: string;
   description: string;
   price: number;
+  currency: 'TRY' | 'USD' | 'EUR';
   stock: number;
   category: string;
   sku: string;
@@ -52,6 +53,7 @@ const ProductsPage: React.FC = () => {
     name: '',
     description: '',
     price: 0,
+    currency: 'TRY',
     stock: 0,
     category: '',
     sku: '',
@@ -329,6 +331,7 @@ const ProductsPage: React.FC = () => {
       name: product.name,
       description: product.description,
       price: product.price,
+      currency: product.currency || 'TRY',
       stock: product.stock,
       category: product.category,
       sku: product.sku,
@@ -356,6 +359,7 @@ const ProductsPage: React.FC = () => {
       name: '',
       description: '',
       price: 0,
+      currency: 'TRY',
       stock: 0,
       category: '',
       sku: '',
@@ -399,10 +403,10 @@ const ProductsPage: React.FC = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number, currency: string = 'TRY') => {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: 'TRY',
+      currency: currency,
     }).format(amount);
   };
 
@@ -1115,7 +1119,7 @@ const ProductsPage: React.FC = () => {
 
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600">Fiyat:</span>
-                        <span className="font-semibold text-green-600">{formatCurrency(product.price)}</span>
+                        <span className="font-semibold text-green-600">{formatCurrency(product.price, product.currency)}</span>
                       </div>
 
                       <div className="flex items-center justify-between text-sm">
@@ -1180,7 +1184,7 @@ const ProductsPage: React.FC = () => {
                             {product.sku}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                            {formatCurrency(product.price)}
+                            {formatCurrency(product.price, product.currency)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {product.stock} adet
@@ -1325,16 +1329,27 @@ const ProductsPage: React.FC = () => {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Fiyat *
                     </label>
-                    <input
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                      className="input-field"
-                      placeholder="0.00"
-                      min="0"
-                      step="0.01"
-                      required
-                    />
+                    <div className="flex space-x-2">
+                      <input
+                        type="number"
+                        value={formData.price}
+                        onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                        className="input-field flex-1"
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                        required
+                      />
+                      <select
+                        value={formData.currency || 'TRY'}
+                        onChange={(e) => setFormData({ ...formData, currency: e.target.value as 'TRY' | 'USD' | 'EUR' })}
+                        className="input-field w-24"
+                      >
+                        <option value="TRY">₺ (TL)</option>
+                        <option value="USD">$ (USD)</option>
+                        <option value="EUR">€ (EUR)</option>
+                      </select>
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">

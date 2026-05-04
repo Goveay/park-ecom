@@ -98,6 +98,7 @@ services:
     environment:
       - HOSTNAME=0.0.0.0
       - PORT=3000
+      - VENDURE_INTERNAL_API_URL=http://server:3000/shop-api
       - NEXT_PUBLIC_VENDURE_SHOP_API_URL=https://api.parkpicasso.com/shop-api
       - NEXT_PUBLIC_VENDURE_ASSET_URL=https://api.parkpicasso.com
     depends_on:

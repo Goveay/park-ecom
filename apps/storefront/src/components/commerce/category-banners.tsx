@@ -5,7 +5,7 @@ const BANNERS = [
     {
         title: "Dış Mekan",
         subtitle: "Oyun Parkı ve Bahçe Mobilyaları",
-        image: "http://localhost:3000/assets/source/56/dismekancover2.webp",
+        image: "https://api.parkpicasso.com/assets/source/56/dismekancover2.webp",
         link: "/search?facets=42&facets=48",
         color: "bg-emerald-500/10",
         position: "object-center" // Adjust this to object-left, object-right, etc.
@@ -13,7 +13,7 @@ const BANNERS = [
     {
         title: "Sosyal Alan",
         subtitle: "Fitness, Peyzaj ve Sosyal Çözümler",
-        image: "http://localhost:3000/assets/source/5e/sosyalalancover.webp",
+        image: "https://api.parkpicasso.com/assets/source/5e/sosyalalancover.webp",
         link: "/search?facets=52&facets=51&facets=50&facets=48",
         color: "bg-amber-500/10",
         position: "object-center"
@@ -21,7 +21,7 @@ const BANNERS = [
     {
         title: "İç Mekan",
         subtitle: "Softplay ve Oyuncak Grupları",
-        image: "http://localhost:3000/assets/source/f1/icmekancover.webp",
+        image: "https://api.parkpicasso.com/assets/source/f1/icmekancover.webp",
         link: "/search?facets=46&facets=49",
         color: "bg-blue-500/10",
         position: "object-center"

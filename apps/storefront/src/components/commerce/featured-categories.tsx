@@ -62,7 +62,7 @@ export async function FeaturedCategories() {
                             return (
                                 <CarouselItem key={index} className="pl-6 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
                                     <Link href={`/collection/${collection.slug}`} className="group/item block h-full">
-                                        <div className={`relative h-full aspect-square bg-white border border-slate-100 p-4 transition-all duration-500 hover:scale-105 hover:-rotate-2 ${color.shadow} flex flex-col items-center justify-center gap-3 text-center`}>
+                                        <div className={`relative h-full aspect-square bg-white p-4 transition-all duration-500 hover:scale-105 hover:-rotate-2 ${color.shadow} flex flex-col items-center justify-center gap-3 text-center`}>
 
                                             <div className={`absolute inset-4 rounded-full ${color.bg} opacity-50 scale-90 group-hover/item:scale-110 transition-transform duration-700`} />
 

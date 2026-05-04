@@ -57,7 +57,7 @@ export function DesignParkBanner() {
                                         px-12 py-4 
                                         rounded-[12px] 
                                         bg-gradient-to-b from-[#FF5700] to-[#EF5200] 
-                                        text-white font-[500] text-[16px] leading-[20px] font-['Poppins']
+                                        text-white font-[500] text-[16px] leading-[20px] font-poppins
                                         transition-all duration-500 ease-in-out
                                         hover:scale-[1.03]
                                         shadow-[0_4px_5px_rgba(255,88,0,0.15),0_10px_13px_rgba(255,88,0,0.22),0_25px_32px_rgba(255,88,0,0.19),inset_0_1px_4px_2px_rgb(255,237,219),inset_0_1px_18px_2px_rgb(255,237,219)]
