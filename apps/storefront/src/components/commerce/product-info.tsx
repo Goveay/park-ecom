@@ -65,6 +65,7 @@ interface ProductInfoProps {
             id: string;
             name: string;
             sku: string;
+            currencyCode: string;
             priceWithTax: number;
             stockLevel: string;
             options: Array<{
@@ -256,7 +257,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                 <div className="flex items-baseline justify-between gap-4 flex-wrap">
                     {selectedVariant && (
                         <p className="text-2xl font-bold text-primary">
-                            <Price value={selectedVariant.priceWithTax} />
+                            <Price value={selectedVariant.priceWithTax} currencyCode={selectedVariant.currencyCode} />
                         </p>
                     )}
                     {selectedVariant && (
@@ -515,6 +516,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
             {selectedVariant && (
                 <ProductBottomBar
                     price={selectedVariant.priceWithTax}
+                    currencyCode={selectedVariant.currencyCode}
                     quantity={quantity}
                     setQuantity={setQuantity}
                     onAddToCart={handleAddToCart}

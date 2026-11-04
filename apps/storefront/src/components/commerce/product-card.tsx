@@ -143,9 +143,9 @@ export function ProductCard({ product: productProp }: ProductCardProps) {
                                         <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Fiyat</span>
                                         <div className="text-lg font-black text-slate-900">
                                             {product.priceWithTax.__typename === 'PriceRange' ? (
-                                                <Price value={product.priceWithTax.min} />
+                                                <Price value={product.priceWithTax.min} currencyCode={product.currencyCode} />
                                             ) : product.priceWithTax.__typename === 'SinglePrice' ? (
-                                                <Price value={product.priceWithTax.value} />
+                                                <Price value={product.priceWithTax.value} currencyCode={product.currencyCode} />
                                             ) : null}
                                         </div>
                                     </div>

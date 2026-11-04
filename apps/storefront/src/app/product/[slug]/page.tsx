@@ -13,7 +13,7 @@ import {
 import { ChevronRight, Home as HomeIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { cacheLife, cacheTag } from 'next/cache';
+import { cache } from 'react';
 import {
     SITE_NAME,
     truncateDescription,
@@ -21,13 +21,9 @@ import {
     buildOgImages,
 } from '@/lib/metadata';
 
-async function getProductData(slug: string) {
-    'use cache';
-    cacheLife('hours');
-    cacheTag(`product-${slug}`);
-
-    return await query(GetProductDetailQuery, { slug });
-}
+const getProductData = cache((slug: string) =>
+    query(GetProductDetailQuery, { slug }, { fetch: { cache: 'no-store' } })
+);
 
 export async function generateMetadata({
     params,
