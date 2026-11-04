@@ -7,7 +7,7 @@ import { ProductCardFragment } from "@/lib/vendure/fragments";
 
 async function getLatestProducts() {
     'use cache'
-    cacheLife('days')
+    cacheLife('seconds')
 
     // Fetch latest 8 products
     const result = await query(SearchProductsQuery, {

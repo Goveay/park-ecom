@@ -8,7 +8,7 @@ interface PriceProps {
 export function Price({value, currencyCode = 'USD'}: PriceProps) {
     return (
         <>
-            {new Intl.NumberFormat('en-US', {
+            {new Intl.NumberFormat('tr-TR', {
                 style: 'currency',
                 currency: currencyCode,
             }).format(value / 100)}

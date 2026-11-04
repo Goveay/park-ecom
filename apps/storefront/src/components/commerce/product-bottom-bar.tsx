@@ -8,6 +8,7 @@ import { Price } from "@/components/commerce/price";
 
 interface ProductBottomBarProps {
     price: number;
+    currencyCode: string;
     quantity: number;
     setQuantity: (qty: number) => void;
     onAddToCart: () => void;
@@ -18,6 +19,7 @@ interface ProductBottomBarProps {
 
 export function ProductBottomBar({
     price,
+    currencyCode,
     quantity,
     setQuantity,
     onAddToCart,
@@ -54,7 +56,7 @@ export function ProductBottomBar({
                     <div className="text-right flex flex-col justify-center px-1">
                         <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold leading-none mb-1">Toplam</span>
                         <div className="text-sm font-black text-foreground leading-none">
-                            <Price value={price * quantity} />
+                            <Price value={price * quantity} currencyCode={currencyCode} />
                         </div>
                     </div>
 

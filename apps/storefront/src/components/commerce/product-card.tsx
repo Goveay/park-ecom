@@ -9,17 +9,22 @@ import Link from "next/link";
 import { AddToCartButton } from './add-to-cart-button';
 
 interface ProductCardProps {
-    product: FragmentOf<typeof ProductCardFragment> & { variants?: any[] };
+    product: FragmentOf<typeof ProductCardFragment> & { variants?: Array<{
+        id: string;
+        name: string;
+        priceWithTax: number;
+        currencyCode: string;
+        featuredAsset?: { preview: string } | null;
+    }> };
 }
 
 export function ProductCard({ product: productProp }: ProductCardProps) {
     const product = readFragment(ProductCardFragment, productProp);
 
     const defaultImage = product.productAsset?.preview;
-    const variantImage = product.productVariantAsset?.preview;
 
     // Sadece ana resimden (defaultImage) farklı resme sahip varyantları filtreleyelim
-    const variantsWithImages = productProp.variants?.filter((v: any) =>
+    const variantsWithImages = productProp.variants?.filter(v =>
         v.featuredAsset?.preview && v.featuredAsset.preview !== defaultImage
     ) || [];
 
@@ -28,8 +33,17 @@ export function ProductCard({ product: productProp }: ProductCardProps) {
     const legacyVariantImage = product.productVariantAsset?.preview;
     const hasLegacyVariantImage = legacyVariantImage && legacyVariantImage !== defaultImage && variantsWithImages.length === 0;
 
-    const [activeImage, setActiveImage] = useState<string | undefined>(defaultImage);
-    const [activeLink, setActiveLink] = useState<string>(`/product/${product.slug}`);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
+    const variants = productProp.variants;
+    const defaultVariant = variants?.find(v => v.featuredAsset?.preview === defaultImage) ?? variants?.[0];
+    const variant = variants?.find(v => v.id === hoveredId) ?? defaultVariant;
+    const activeId = variant?.id ?? product.productVariantId;
+    const activeImage = hoveredId ? (variant?.featuredAsset?.preview ?? legacyVariantImage ?? defaultImage) : defaultImage;
+    const linkedId = variant?.id ?? hoveredId;
+    const activeLink = linkedId ? `/product/${product.slug}?variant=${linkedId}` : `/product/${product.slug}`;
+    const searchPrice = product.priceWithTax;
+    const priceValue = variant?.priceWithTax ?? (searchPrice.__typename === 'PriceRange' ? searchPrice.min : searchPrice.__typename === 'SinglePrice' ? searchPrice.value : null);
+    const currencyCode = variant?.currencyCode ?? product.currencyCode;
 
     return (
         <div className="group relative flex flex-col h-full bg-card rounded-2xl overflow-hidden border border-border/50 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] transition-all duration-500">
@@ -54,28 +68,26 @@ export function ProductCard({ product: productProp }: ProductCardProps) {
 
                     {/* Variant Thumbnail Overlay */}
                     <div className="absolute bottom-3 left-3 z-20 flex flex-wrap gap-2 pr-3">
-                        {variantsWithImages.map((variant: any) => (
+                        {variantsWithImages.map((variant) => (
                             <div
                                 key={variant.id}
-                                className={`w-10 h-10 rounded-full border-2 overflow-hidden cursor-pointer transition-all duration-300 shadow-sm ${activeImage === variant.featuredAsset.preview ? 'border-primary ring-2 ring-primary/20 scale-110' : 'border-white hover:border-primary/50'} bg-white`}
+                                className={`w-10 h-10 rounded-full border-2 overflow-hidden cursor-pointer transition-all duration-300 shadow-sm ${activeImage === variant.featuredAsset!.preview ? 'border-primary ring-2 ring-primary/20 scale-110' : 'border-white hover:border-primary/50'} bg-white`}
                                 onMouseEnter={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    setActiveImage(variant.featuredAsset.preview);
-                                    setActiveLink(`/product/${product.slug}?variant=${variant.id}`);
+                                    setHoveredId(variant.id);
                                 }}
                                 onMouseLeave={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    setActiveImage(defaultImage);
-                                    setActiveLink(`/product/${product.slug}`);
+                                    setHoveredId(null);
                                 }}
                                 onClick={(e) => {
                                     // Prevent the default link click if it bubbles, though Next.js Link handles it
                                 }}
                             >
                                 <Image
-                                    src={variant.featuredAsset.preview}
+                                    src={variant.featuredAsset!.preview}
                                     alt={variant.name}
                                     width={40}
                                     height={40}
@@ -91,14 +103,12 @@ export function ProductCard({ product: productProp }: ProductCardProps) {
                                 onMouseEnter={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    setActiveImage(legacyVariantImage);
-                                    setActiveLink(`/product/${product.slug}?variant=${product.productVariantId}`);
+                                    setHoveredId(product.productVariantId);
                                 }}
                                 onMouseLeave={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    setActiveImage(defaultImage);
-                                    setActiveLink(`/product/${product.slug}`);
+                                    setHoveredId(null);
                                 }}
                             >
                                 <Image
@@ -121,12 +131,6 @@ export function ProductCard({ product: productProp }: ProductCardProps) {
                     <div className="flex items-end justify-between mt-auto">
                         <Suspense fallback={<div className="h-6 w-20 rounded bg-muted animate-pulse"></div>}>
                             {(() => {
-                                const priceValue = product.priceWithTax.__typename === 'PriceRange'
-                                    ? product.priceWithTax.min
-                                    : product.priceWithTax.__typename === 'SinglePrice'
-                                        ? product.priceWithTax.value
-                                        : null;
-
                                 if (priceValue === 0) {
                                     return (
                                         <div className="flex flex-col items-start gap-0.5">
@@ -142,11 +146,7 @@ export function ProductCard({ product: productProp }: ProductCardProps) {
                                     <div className="flex flex-col">
                                         <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Fiyat</span>
                                         <div className="text-lg font-black text-slate-900">
-                                            {product.priceWithTax.__typename === 'PriceRange' ? (
-                                                <Price value={product.priceWithTax.min} />
-                                            ) : product.priceWithTax.__typename === 'SinglePrice' ? (
-                                                <Price value={product.priceWithTax.value} />
-                                            ) : null}
+                                            {priceValue !== null && <Price value={priceValue} currencyCode={currencyCode} />}
                                         </div>
                                     </div>
                                 );
@@ -158,8 +158,8 @@ export function ProductCard({ product: productProp }: ProductCardProps) {
 
             {/* Add to Cart Action */}
             <div className="absolute bottom-4 right-4 z-10">
-                {product.productVariantId && (
-                    <AddToCartButton variantId={product.productVariantId} />
+                {activeId && (
+                    <AddToCartButton variantId={activeId} />
                 )}
             </div>
         </div>

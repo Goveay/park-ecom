@@ -7,7 +7,7 @@ import { ProductCardFragment } from "@/lib/vendure/fragments";
 
 async function getHighlightProducts() {
     'use cache'
-    cacheLife('days')
+    cacheLife('seconds')
 
     // Fetch products from the same collection as featured products
     // You can change this to a different collection slug if needed

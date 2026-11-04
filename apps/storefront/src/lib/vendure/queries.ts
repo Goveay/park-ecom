@@ -72,6 +72,7 @@ export const GetProductDetailQuery = graphql(`
                 id
                 name
                 sku
+                currencyCode
                 priceWithTax
                 stockLevel
                 featuredAsset {
