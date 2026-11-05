@@ -33,12 +33,12 @@ export async function CartItems({activeOrder}: { activeOrder: ActiveOrder | null
         return (
             <div className="container mx-auto px-4 py-16">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-4">Your Cart is Empty</h1>
+                    <h1 className="text-3xl font-bold mb-4">Sepetiniz Boş</h1>
                     <p className="text-muted-foreground mb-8">
-                        Add some items to your cart to get started
+                        Alışverişe başlamak için sepetinize ürün ekleyin
                     </p>
                     <Button asChild>
-                        <Link href="/">Continue Shopping</Link>
+                        <Link href="/">Alışverişe Devam Et</Link>
                     </Button>
                 </div>
             </div>
@@ -54,7 +54,7 @@ export async function CartItems({activeOrder}: { activeOrder: ActiveOrder | null
                 >
                     {line.productVariant.product.featuredAsset && (
                         <Link
-                            href={`/src/app/%5Blocale%5D/product/${line.productVariant.product.slug}`}
+                            href={`/product/${line.productVariant.product.slug}`}
                             className="flex-shrink-0"
                         >
                             <Image
@@ -69,7 +69,7 @@ export async function CartItems({activeOrder}: { activeOrder: ActiveOrder | null
 
                     <div className="flex-grow min-w-0">
                         <Link
-                            href={`/src/app/%5Blocale%5D/product/${line.productVariant.product.slug}`}
+                            href={`/product/${line.productVariant.product.slug}`}
                             className="font-semibold hover:underline block"
                         >
                             {line.productVariant.product.name}
@@ -83,7 +83,7 @@ export async function CartItems({activeOrder}: { activeOrder: ActiveOrder | null
                             SKU: {line.productVariant.sku}
                         </p>
                         <p className="text-sm text-muted-foreground mt-2 sm:hidden">
-                            <Price value={line.unitPriceWithTax} currencyCode={activeOrder.currencyCode}/> each
+                            <Price value={line.unitPriceWithTax} currencyCode={activeOrder.currencyCode}/> adet
                         </p>
 
                         <div className="flex items-center gap-3 mt-4">
@@ -154,7 +154,7 @@ export async function CartItems({activeOrder}: { activeOrder: ActiveOrder | null
                             <Price value={line.linePriceWithTax} currencyCode={activeOrder.currencyCode}/>
                         </p>
                         <p className="text-sm text-muted-foreground mt-1">
-                            <Price value={line.unitPriceWithTax} currencyCode={activeOrder.currencyCode}/> each
+                            <Price value={line.unitPriceWithTax} currencyCode={activeOrder.currencyCode}/> adet
                         </p>
                     </div>
                 </div>

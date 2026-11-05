@@ -5,8 +5,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
-    title: 'Create Account',
-    description: 'Create a new account to start shopping with us.',
+    title: 'Hesap Oluştur',
+    description: 'Alışverişe başlamak için yeni bir hesap oluşturun.',
 };
 
 function RegistrationFormSkeleton() {
@@ -60,9 +60,9 @@ export default async function RegisterPage({searchParams}: PageProps<'/register'
         <div className="flex min-h-screen items-center justify-center px-4">
             <div className="w-full max-w-md space-y-6">
                 <div className="space-y-2 text-center">
-                    <h1 className="text-3xl font-bold">Create Account</h1>
+                    <h1 className="text-3xl font-bold">Hesap Oluştur</h1>
                     <p className="text-muted-foreground">
-                        Sign up to start shopping with us
+                        Alışverişe başlamak için kayıt olun
                     </p>
                 </div>
                 <Suspense fallback={<RegistrationFormSkeleton />}>

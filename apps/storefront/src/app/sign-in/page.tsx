@@ -5,8 +5,8 @@ import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Skeleton} from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
-    title: 'Sign In',
-    description: 'Sign in to your account to access your orders, wishlist, and more.',
+    title: 'Giriş Yap',
+    description: 'Siparişlerinize ve hesabınıza erişmek için giriş yapın.',
 };
 
 function LoginFormSkeleton() {
@@ -36,8 +36,18 @@ function LoginFormSkeleton() {
 async function SignInContent({searchParams}: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
     const resolvedParams = await searchParams;
     const redirectTo = resolvedParams?.redirectTo as string | undefined;
+    const registered = resolvedParams?.registered === '1';
 
-    return <LoginForm redirectTo={redirectTo}/>;
+    return (
+        <div className="space-y-4">
+            {registered && (
+                <div className="rounded-md border border-green-200 bg-green-50 p-4 text-center text-sm text-green-700">
+                    Hesabınız oluşturuldu. Şimdi giriş yapabilirsiniz.
+                </div>
+            )}
+            <LoginForm redirectTo={redirectTo}/>
+        </div>
+    );
 }
 
 export default async function SignInPage({searchParams}: PageProps<'/sign-in'>) {
@@ -45,9 +55,9 @@ export default async function SignInPage({searchParams}: PageProps<'/sign-in'>) 
         <div className="flex min-h-screen items-center justify-center px-4">
             <div className="w-full max-w-md space-y-6">
                 <div className="space-y-2 text-center">
-                    <h1 className="text-3xl font-bold">Sign In</h1>
+                    <h1 className="text-3xl font-bold">Giriş Yap</h1>
                     <p className="text-muted-foreground">
-                        Enter your credentials to access your account
+                        Hesabınıza erişmek için bilgilerinizi girin
                     </p>
                 </div>
                 <Suspense fallback={<LoginFormSkeleton/>}>

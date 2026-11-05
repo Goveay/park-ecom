@@ -139,6 +139,15 @@ export async function Footer() {
                         <Image src="/TROY.png" alt="Troy" width={120} height={60} className="h-4 w-auto grayscale hover:grayscale-0 transition-all duration-500 object-contain" />
                     </div>
 
+                    <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-center text-sm text-muted-foreground">
+                        <Link href="/legal/mesafeli-satis" className="hover:text-[#ff6000] transition-colors">Mesafeli Satış Sözleşmesi</Link>
+                        <Link href="/legal/on-bilgilendirme" className="hover:text-[#ff6000] transition-colors">Ön Bilgilendirme Formu</Link>
+                        <Link href="/legal/iptal-iade" className="hover:text-[#ff6000] transition-colors">İptal ve İade Koşulları</Link>
+                        <Link href="/legal/teslimat" className="hover:text-[#ff6000] transition-colors">Teslimat ve Montaj</Link>
+                        <Link href="/legal/kvkk" className="hover:text-[#ff6000] transition-colors">KVKK ve Gizlilik</Link>
+                        <Link href="/legal/uyelik" className="hover:text-[#ff6000] transition-colors">Üyelik ve Kullanım Koşulları</Link>
+                    </div>
+
                     <Copyright />
                 </div>
             </div>

@@ -12,7 +12,7 @@ export default function OrderSummary() {
   return (
     <Card className="sticky top-4">
       <CardHeader>
-        <CardTitle>Order Summary</CardTitle>
+        <CardTitle>Sipariş Özeti</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
@@ -39,7 +39,7 @@ export default function OrderSummary() {
                   </p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Qty: {line.quantity}
+                  Adet: {line.quantity}
                 </p>
               </div>
               <div className="text-sm font-medium">
@@ -53,7 +53,7 @@ export default function OrderSummary() {
 
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Subtotal</span>
+            <span className="text-muted-foreground">Ara Toplam</span>
             <span>
               <Price value={order.subTotalWithTax} currencyCode={order.currencyCode} />
             </span>
@@ -73,11 +73,11 @@ export default function OrderSummary() {
           )}
 
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Shipping</span>
+            <span className="text-muted-foreground">Kargo</span>
             <span>
               {order.shippingWithTax > 0
                 ? <Price value={order.shippingWithTax} currencyCode={order.currencyCode} />
-                : 'To be calculated'}
+                : 'Ödeme adımında hesaplanır'}
             </span>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function OrderSummary() {
         <Separator />
 
         <div className="flex justify-between font-bold text-lg">
-          <span>Total</span>
+          <span>Toplam</span>
           <span>
             <Price value={order.totalWithTax} currencyCode={order.currencyCode} />
           </span>

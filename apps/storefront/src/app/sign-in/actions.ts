@@ -20,9 +20,9 @@ export async function loginAction(prevState: { error?: string } | undefined, for
 
     if (loginResult.__typename !== 'CurrentUser') {
         if (loginResult.__typename === 'NotVerifiedError') {
-            return { error: 'Please verify your email address before signing in.' };
+            return { error: 'Giriş yapmadan önce e-posta adresinizi doğrulamanız gerekiyor.' };
         }
-        return { error: 'Invalid email or password.' };
+        return { error: 'E-posta adresi veya şifre hatalı.' };
     }
 
     // Store the token in a cookie if returned

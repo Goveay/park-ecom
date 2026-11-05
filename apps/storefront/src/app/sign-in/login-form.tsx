@@ -19,8 +19,8 @@ import {
 import Link from 'next/link';
 
 const loginSchema = z.object({
-    username: z.email('Please enter a valid email address'),
-    password: z.string().min(1, 'Password is required'),
+    username: z.email('Geçerli bir e-posta adresi girin'),
+    password: z.string().min(1, 'Şifre zorunludur'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -73,7 +73,7 @@ export function LoginForm({redirectTo}: LoginFormProps) {
                             name="username"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>E-posta</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
@@ -93,12 +93,12 @@ export function LoginForm({redirectTo}: LoginFormProps) {
                             render={({field}) => (
                                 <FormItem>
                                     <div className="flex items-center justify-between">
-                                        <FormLabel>Password</FormLabel>
+                                        <FormLabel>Şifre</FormLabel>
                                         <Link
                                             href="/forgot-password"
                                             className="text-muted-foreground hover:text-primary text-sm"
                                         >
-                                            Forgot password?
+                                            Şifremi unuttum
                                         </Link>
                                     </div>
 
@@ -121,14 +121,14 @@ export function LoginForm({redirectTo}: LoginFormProps) {
                             </div>
                         )}
                         <Button type="submit" className="w-full" disabled={isPending}>
-                            {isPending ? 'Signing in...' : 'Sign In'}
+                            {isPending ? 'Giriş yapılıyor...' : 'Giriş Yap'}
                         </Button>
                     </CardContent>
                     <CardFooter className="flex flex-col space-y-4 mt-2">
                         <div className="text-muted-foreground text-sm text-center">
-                            Don&apos;t have an account?{' '}
+                            Hesabınız yok mu?{' '}
                             <Link href={registerHref} className="hover:text-primary underline">
-                                Register
+                                Kayıt Ol
                             </Link>
                         </div>
                     </CardFooter>

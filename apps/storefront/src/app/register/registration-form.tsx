@@ -19,14 +19,14 @@ import {
 import Link from 'next/link';
 
 const registrationSchema = z.object({
-    emailAddress: z.string().email('Please enter a valid email address'),
+    emailAddress: z.string().email('Geçerli bir e-posta adresi girin'),
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     phoneNumber: z.string().optional(),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
+    password: z.string().min(8, 'Şifre en az 8 karakter olmalıdır'),
     confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "Şifreler eşleşmiyor",
     path: ["confirmPassword"],
 });
 
@@ -87,7 +87,7 @@ export function RegistrationForm({ redirectTo }: RegistrationFormProps) {
                             name="emailAddress"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email Address</FormLabel>
+                                    <FormLabel>E-posta Adresi</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
@@ -107,11 +107,11 @@ export function RegistrationForm({ redirectTo }: RegistrationFormProps) {
                                 name="firstName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>First Name</FormLabel>
+                                        <FormLabel>Ad</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="text"
-                                                placeholder="John"
+                                                placeholder="Adınız"
                                                 disabled={isPending}
                                                 {...field}
                                             />
@@ -126,11 +126,11 @@ export function RegistrationForm({ redirectTo }: RegistrationFormProps) {
                                 name="lastName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Last Name</FormLabel>
+                                        <FormLabel>Soyad</FormLabel>
                                         <FormControl>
                                             <Input
                                                 type="text"
-                                                placeholder="Doe"
+                                                placeholder="Soyadınız"
                                                 disabled={isPending}
                                                 {...field}
                                             />
@@ -146,11 +146,11 @@ export function RegistrationForm({ redirectTo }: RegistrationFormProps) {
                             name="phoneNumber"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Phone Number (Optional)</FormLabel>
+                                    <FormLabel>Telefon Numarası (Opsiyonel)</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="tel"
-                                            placeholder="+1 (555) 000-0000"
+                                            placeholder="+90 (5xx) xxx xx xx"
                                             disabled={isPending}
                                             {...field}
                                         />
@@ -165,7 +165,7 @@ export function RegistrationForm({ redirectTo }: RegistrationFormProps) {
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>Şifre</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="password"
@@ -184,7 +184,7 @@ export function RegistrationForm({ redirectTo }: RegistrationFormProps) {
                             name="confirmPassword"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormLabel>Şifre Tekrar</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="password"
@@ -205,15 +205,15 @@ export function RegistrationForm({ redirectTo }: RegistrationFormProps) {
                         )}
 
                         <Button type="submit" className="w-full" disabled={isPending}>
-                            {isPending ? 'Creating account...' : 'Create Account'}
+                            {isPending ? 'Hesap oluşturuluyor...' : 'Hesap Oluştur'}
                         </Button>
                     </CardContent>
                     <CardFooter className="flex flex-col space-y-4 mt-4">
 
                         <div className="text-sm text-center text-muted-foreground">
-                            Already have an account?{' '}
+                            Zaten hesabınız var mı?{' '}
                             <Link href={signInHref} className="hover:text-primary underline">
-                                Sign in
+                                Giriş yap
                             </Link>
                         </div>
                     </CardFooter>

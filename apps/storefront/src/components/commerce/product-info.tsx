@@ -187,22 +187,23 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
 
             if (result.success) {
                 setIsAdded(true);
-                toast.success('Added to cart', {
-                    description: `${product.name} has been added to your cart`,
+                toast.success('Sepete eklendi', {
+                    description: `${product.name} sepetinize eklendi`,
                 });
 
                 // Reset the added state after 2 seconds
                 setTimeout(() => setIsAdded(false), 2000);
             } else {
-                toast.error('Error', {
-                    description: result.error || 'Failed to add item to cart',
+                toast.error('Hata', {
+                    description: result.error || 'Ürün sepete eklenemedi',
                 });
             }
         });
     };
 
     const isInStock = selectedVariant && selectedVariant.stockLevel !== 'OUT_OF_STOCK';
-    const canAddToCart = selectedVariant && isInStock;
+    const hasPrice = !selectedVariant || selectedVariant.priceWithTax > 0;
+    const canAddToCart = Boolean(selectedVariant && isInStock && selectedVariant.priceWithTax > 0);
 
     const handleBuyNow = async () => {
         if (!selectedVariant) return;
@@ -218,11 +219,13 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
         });
     };
 
-    const buildWhatsAppUrl = () => {
+    const buildWhatsAppUrl = (isQuote = false) => {
         const productUrl = typeof window !== 'undefined'
             ? `${window.location.origin}/product/${product.slug}`
             : `/product/${product.slug}`;
-        const message = `Merhaba! Bu ürünün detaylarını öğrenmek istiyorum ${productUrl} .`;
+        const message = isQuote
+            ? `Merhaba! ${product.name} ürünü için fiyat teklifi almak istiyorum: ${productUrl}`
+            : `Merhaba! Bu ürünün detaylarını öğrenmek istiyorum ${productUrl} .`;
         return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     };
 
@@ -257,10 +260,12 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                 <div className="flex items-baseline justify-between gap-4 flex-wrap">
                     {selectedVariant && (
                         <p className="text-2xl font-bold text-primary">
-                            <Price value={selectedVariant.priceWithTax} currencyCode={selectedVariant.currencyCode} />
+                            {hasPrice
+                                ? <Price value={selectedVariant.priceWithTax} currencyCode={selectedVariant.currencyCode} />
+                                : <span className="text-base font-semibold text-muted-foreground">Fiyat için teklif alın</span>}
                         </p>
                     )}
-                    {selectedVariant && (
+                    {selectedVariant?.sku && (
                         <span className="text-xs text-muted-foreground font-medium">
                             SKU: {selectedVariant.sku}
                         </span>
@@ -388,9 +393,9 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
             {selectedVariant && (
                 <div className="text-sm">
                     {isInStock ? (
-                        <span className="text-green-600 font-medium">In Stock</span>
+                        <span className="text-green-600 font-medium">Stokta</span>
                     ) : (
-                        <span className="text-destructive font-medium">Out of Stock</span>
+                        <span className="text-destructive font-medium">Stokta Yok</span>
                     )}
                 </div>
             )}
@@ -398,6 +403,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
             {/* Action Buttons */}
             <div className="pt-4 space-y-3">
                 {/* Row: Sepete Ekle + Hemen Satın Al */}
+                {hasPrice && (
                 <div className="flex gap-4">
                     {/* Sepete Ekle */}
                     <Button
@@ -449,6 +455,21 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                         </span>
                     </Button>
                 </div>
+                )}
+
+                {!hasPrice && (
+                    <a
+                        href={buildWhatsAppUrl(true)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-3 w-full h-14 rounded-xl px-6 font-bold text-white transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.97] group overflow-hidden relative"
+                        style={{ backgroundColor: '#25D366' }}
+                    >
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <MessageCircle className="h-5 w-5 fill-white group-hover:scale-110 group-hover:rotate-[15deg] transition-transform duration-300 relative z-10" />
+                        <span className="relative z-10 group-active:translate-y-[-2px] transition-transform">Teklif Al</span>
+                    </a>
+                )}
 
                 <div className="relative flex items-center py-4">
                     <div className="flex-grow border-t border-border/60"></div>
@@ -487,7 +508,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                         >
                             <ShieldCheck className="w-4 h-4 text-green-500" style={{ filter: 'drop-shadow(0 0 4px rgba(34,197,94,0.45))' }} />
                         </div>
-                        <span className="text-[10px] font-semibold text-muted-foreground uppercase leading-tight">100% Memnuniyet Garantisi"</span>
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase leading-tight">100% Memnuniyet Garantisi</span>
                     </div>
                     <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-muted/30 border border-border/40">
                         <div
@@ -513,7 +534,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
 
 
             {/* Product Bottom Action Bar */}
-            {selectedVariant && (
+            {selectedVariant && hasPrice && (
                 <ProductBottomBar
                     price={selectedVariant.priceWithTax}
                     currencyCode={selectedVariant.currencyCode}

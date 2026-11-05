@@ -40,6 +40,7 @@ export const config: VendureConfig = {
     },
     authOptions: {
         tokenMethod: ['bearer', 'cookie'],
+        requireVerification: false,
         superadminCredentials: {
             identifier: process.env.SUPERADMIN_USERNAME,
             password: process.env.SUPERADMIN_PASSWORD,
@@ -103,10 +104,10 @@ export const config: VendureConfig = {
             globalTemplateVars: {
                 // The following variables will change depending on your storefront implementation.
                 // Here we are assuming a storefront running at http://localhost:8080.
-                fromAddress: '"example" <noreply@example.com>',
-                verifyEmailAddressUrl: 'http://localhost:8080/verify',
-                passwordResetUrl: 'http://localhost:8080/password-reset',
-                changeEmailAddressUrl: 'http://localhost:8080/verify-email-address-change'
+                fromAddress: '"Park Picasso" <info@parkpicasso.com>',
+                verifyEmailAddressUrl: 'https://www.parkpicasso.com/verify',
+                passwordResetUrl: 'https://www.parkpicasso.com/reset-password',
+                changeEmailAddressUrl: 'https://www.parkpicasso.com/account/verify-email'
             },
         }),
         DashboardPlugin.init({

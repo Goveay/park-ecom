@@ -35,7 +35,7 @@ export async function setShippingAddress(
     );
 
     if (shippingResult.data.setOrderShippingAddress.__typename !== 'Order') {
-        throw new Error('Failed to set shipping address');
+        throw new Error('Teslimat adresi kaydedilemedi');
     }
 
     if (useSameForBilling) {
@@ -57,7 +57,7 @@ export async function setShippingMethod(shippingMethodId: string) {
     );
 
     if (result.data.setOrderShippingMethod.__typename !== 'Order') {
-        throw new Error('Failed to set shipping method');
+        throw new Error('Kargo yöntemi kaydedilemedi');
     }
 
     revalidatePath('/checkout');
@@ -71,7 +71,7 @@ export async function createCustomerAddress(address: AddressInput) {
     );
 
     if (!result.data.createCustomerAddress) {
-        throw new Error('Failed to create customer address');
+        throw new Error('Adres kaydedilemedi');
     }
 
     revalidatePath('/checkout');
@@ -88,19 +88,26 @@ export async function transitionToArrangingPayment() {
     if (result.data.transitionOrderToState?.__typename === 'OrderStateTransitionError') {
         const errorResult = result.data.transitionOrderToState;
         throw new Error(
-            `Failed to transition order state: ${errorResult.errorCode} - ${errorResult.message}`
+            `Sipariş durumu güncellenemedi: ${errorResult.errorCode} - ${errorResult.message}`
         );
     }
 
     revalidatePath('/checkout');
 }
 
-export async function placeOrder(paymentMethodCode: string) {
+export async function placeOrder(paymentMethodCode: string, agreementsAccepted: boolean) {
+    if (!agreementsAccepted) {
+        throw new Error('Sipariş vermek için mesafeli satış ve KVKK onayları gereklidir');
+    }
+
     // First, transition the order to ArrangingPayment state
     await transitionToArrangingPayment();
 
     // Prepare metadata based on payment method
-    const metadata: Record<string, unknown> = {};
+    const metadata: Record<string, unknown> = {
+        agreementsAccepted: true,
+        agreementsAcceptedAt: new Date().toISOString(),
+    };
 
     // For standard payment, include the required fields
     if (paymentMethodCode === 'standard-payment') {
@@ -124,7 +131,7 @@ export async function placeOrder(paymentMethodCode: string) {
     if (result.data.addPaymentToOrder.__typename !== 'Order') {
         const errorResult = result.data.addPaymentToOrder;
         throw new Error(
-            `Failed to place order: ${errorResult.errorCode} - ${errorResult.message}`
+            `Sipariş oluşturulamadı: ${errorResult.errorCode} - ${errorResult.message}`
         );
     }
 

@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-    {href: '/account/orders', label: 'Orders', icon: Package},
-    {href: '/account/addresses', label: 'Addresses', icon: MapPin},
-    {href: '/account/profile', label: 'Profile', icon: User},
+    {href: '/account/orders', label: 'Siparişlerim', icon: Package},
+    {href: '/account/addresses', label: 'Adreslerim', icon: MapPin},
+    {href: '/account/profile', label: 'Profilim', icon: User},
 ];
 
 export default async function AccountLayout({children}: LayoutProps<'/account'>) {

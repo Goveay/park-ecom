@@ -17,11 +17,11 @@ type ActiveOrder = {
 export async function OrderSummary({activeOrder}: { activeOrder: ActiveOrder }) {
     return (
         <div className="border rounded-lg p-6 bg-card sticky top-4">
-            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <h2 className="text-xl font-bold mb-4">Sipariş Özeti</h2>
 
             <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Subtotal</span>
+                    <span className="text-muted-foreground">Ara Toplam</span>
                     <span>
                         <Price value={activeOrder.subTotalWithTax} currencyCode={activeOrder.currencyCode}/>
                     </span>
@@ -39,18 +39,18 @@ export async function OrderSummary({activeOrder}: { activeOrder: ActiveOrder }) 
                     </>
                 )}
                 <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Shipping</span>
+                    <span className="text-muted-foreground">Kargo</span>
                     <span>
                         {activeOrder.shippingWithTax > 0
                             ? <Price value={activeOrder.shippingWithTax} currencyCode={activeOrder.currencyCode}/>
-                            : 'Calculated at checkout'}
+                            : 'Ödeme adımında hesaplanır'}
                     </span>
                 </div>
             </div>
 
             <div className="border-t pt-4 mb-6">
                 <div className="flex justify-between font-bold text-lg">
-                    <span>Total</span>
+                    <span>Toplam</span>
                     <span>
                         <Price value={activeOrder.totalWithTax} currencyCode={activeOrder.currencyCode}/>
                     </span>
@@ -58,11 +58,11 @@ export async function OrderSummary({activeOrder}: { activeOrder: ActiveOrder }) 
             </div>
 
             <Button className="w-full" size="lg" asChild>
-                <Link href="/checkout">Proceed to Checkout</Link>
+                <Link href="/checkout">Ödemeye Geç</Link>
             </Button>
 
             <Button variant="outline" className="w-full mt-2" asChild>
-                <Link href="/">Continue Shopping</Link>
+                <Link href="/">Alışverişe Devam Et</Link>
             </Button>
         </div>
     );
